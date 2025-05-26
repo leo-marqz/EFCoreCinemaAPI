@@ -16,8 +16,9 @@ namespace EFCoreCinemaAPI
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>((options) =>
             {
-                options.UseNpgsql(
-                        builder.Configuration.GetConnectionString("DefaultConnection")
+                options.UseSqlServer(
+                        builder.Configuration.GetConnectionString("DefaultConnection"),
+                        (sqlServer) => sqlServer.UseNetTopologySuite()
                 );
             });
 

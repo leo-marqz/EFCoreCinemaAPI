@@ -28,9 +28,16 @@ namespace EFCoreCinemaAPI
             modelBuilder.Entity<Actor>().Property(a=>a.Biography).IsRequired();
             modelBuilder.Entity<Actor>().Property(a => a.DateOfBirth).HasColumnType("date");
 
+            //================================================
+            //Table: Cine
+            //================================================
+            modelBuilder.Entity<Cine>().HasKey(c => c.Id);
+            modelBuilder.Entity<Cine>().Property(c => c.Name).HasMaxLength(150).IsRequired();
+            modelBuilder.Entity<Cine>().Property(c => c.Price).HasPrecision(precision: 9, scale: 2); ;
         }
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Actor> Actors { get; set; }
+        public DbSet<Cine> Cines { get; set; }
     }
 }
