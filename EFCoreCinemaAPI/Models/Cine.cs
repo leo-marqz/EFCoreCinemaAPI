@@ -9,5 +9,8 @@ namespace EFCoreCinemaAPI.Models
         public string Name { get; set; }
         public decimal Price { get; set; } //[Precision(precision: 9, scale: 2)]
         public Point Location { get; set; }
+
+        //Navigation property
+        public CineOffer CineOffer { get; set; }
     }
 }

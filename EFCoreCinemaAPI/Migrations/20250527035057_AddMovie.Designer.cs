@@ -4,6 +4,7 @@ using EFCoreCinemaAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527035057_AddMovie")]
+    partial class AddMovie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,35 +76,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.ToTable("Cines");
                 });
 
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.CineOffer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CineId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("DiscountPercentage")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("date");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CineId")
-                        .IsUnique();
-
-                    b.ToTable("CineOffers");
-                });
-
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
@@ -148,20 +122,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movies");
-                });
-
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.CineOffer", b =>
-                {
-                    b.HasOne("EFCoreCinemaAPI.Models.Cine", null)
-                        .WithOne("CineOffer")
-                        .HasForeignKey("EFCoreCinemaAPI.Models.CineOffer", "CineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.Cine", b =>
-                {
-                    b.Navigation("CineOffer");
                 });
 #pragma warning restore 612, 618
         }
