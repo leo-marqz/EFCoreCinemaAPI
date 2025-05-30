@@ -4,6 +4,7 @@ using EFCoreCinemaAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250530042119_CineRoomMigration")]
+    partial class CineRoomMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,21 +25,6 @@ namespace EFCoreCinemaAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CineRoomMovie", b =>
-                {
-                    b.Property<int>("CineRoomsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CineRoomsId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("CineRoomMovie");
-                });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Actor", b =>
                 {
@@ -124,11 +112,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.Property<int>("CineId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CineRoomType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
                     b.Property<decimal>("Price")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
@@ -188,58 +171,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.MovieActor", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Character")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "ActorId");
-
-                    b.HasIndex("ActorId");
-
-                    b.ToTable("MoviesActors");
-                });
-
-            modelBuilder.Entity("GenreMovie", b =>
-                {
-                    b.Property<int>("GenresId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GenresId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("GenreMovie");
-                });
-
-            modelBuilder.Entity("CineRoomMovie", b =>
-                {
-                    b.HasOne("EFCoreCinemaAPI.Models.CineRoom", null)
-                        .WithMany()
-                        .HasForeignKey("CineRoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCoreCinemaAPI.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("EFCoreCinemaAPI.Models.CineOffer", b =>
                 {
                     b.HasOne("EFCoreCinemaAPI.Models.Cine", null)
@@ -260,55 +191,11 @@ namespace EFCoreCinemaAPI.Migrations
                     b.Navigation("Cine");
                 });
 
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.MovieActor", b =>
-                {
-                    b.HasOne("EFCoreCinemaAPI.Models.Actor", "Actor")
-                        .WithMany("MoviesActors")
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCoreCinemaAPI.Models.Movie", "Movie")
-                        .WithMany("MoviesActors")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("GenreMovie", b =>
-                {
-                    b.HasOne("EFCoreCinemaAPI.Models.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCoreCinemaAPI.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.Actor", b =>
-                {
-                    b.Navigation("MoviesActors");
-                });
-
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Cine", b =>
                 {
                     b.Navigation("CineOffer");
 
                     b.Navigation("CineRooms");
-                });
-
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.Movie", b =>
-                {
-                    b.Navigation("MoviesActors");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,6 @@
 ﻿
 using NetTopologySuite.Geometries;
+using System.Collections.Generic;
 
 namespace EFCoreCinemaAPI.Models
 {
@@ -7,10 +8,10 @@ namespace EFCoreCinemaAPI.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; } //[Precision(precision: 9, scale: 2)]
         public Point Location { get; set; }
 
         //Navigation property
         public CineOffer CineOffer { get; set; }
+        public HashSet<CineRoom> CineRooms { get; set; }
     }
 }
