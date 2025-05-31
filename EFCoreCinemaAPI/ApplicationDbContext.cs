@@ -1,5 +1,6 @@
 ﻿using EFCoreCinemaAPI.Models;
 using EFCoreCinemaAPI.Models.Configurations;
+using EFCoreCinemaAPI.Models.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
@@ -22,6 +23,9 @@ namespace EFCoreCinemaAPI
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Seeding initial data
+            SeedingQueryModule.Seed(modelBuilder);
 
             //modelBuilder.ApplyConfiguration(new GenreConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
