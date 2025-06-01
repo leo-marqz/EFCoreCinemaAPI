@@ -20,6 +20,7 @@ namespace EFCoreCinemaAPI
                         builder.Configuration.GetConnectionString("DefaultConnection"),
                         (sqlServer) => sqlServer.UseNetTopologySuite()
                 );
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
             builder.Services.AddControllers();

@@ -1,5 +1,4 @@
 ﻿using EFCoreCinemaAPI.Models;
-using EFCoreCinemaAPI.Models.Configurations;
 using EFCoreCinemaAPI.Models.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System;
