@@ -29,7 +29,7 @@ namespace EFCoreCinemaAPI.Controllers
                 // Using AsNoTracking for read-only queries to improve performance
                 // AsTracking: follows change tracking, which is useful for updates
                 //return await _context.Genres.AsNoTracking().ToListAsync();
-                var data = await _context.Genres.ToListAsync();
+                var data = await _context.Genres.OrderBy(g=>g.Name).ToListAsync();
                 return Ok(data);
             }
             catch (Exception ex)
@@ -66,9 +66,7 @@ namespace EFCoreCinemaAPI.Controllers
             try
             {
                 if(name.IsNullOrEmpty()) return BadRequest("Name cannot be null or empty.");
-                var genre = await _context.Genres.FirstOrDefaultAsync(
-                        (g)=>g.Name.Contains(name)
-                    );
+                var genre = await _context.Genres.FirstOrDefaultAsync((g)=>g.Name.Contains(name));
                 if (genre is null) return NotFound($"Genre with Name {name} not found!");
 
                 return Ok(genre);
