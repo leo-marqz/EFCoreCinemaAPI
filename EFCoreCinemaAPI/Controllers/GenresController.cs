@@ -80,17 +80,30 @@ namespace EFCoreCinemaAPI.Controllers
         }
 
         [HttpGet("search/{search}")]
-        public async Task<ActionResult<IEnumerable<Genre>>> Search(string search)
+        public async Task<ActionResult<IEnumerable<Genre>>> Search(string search, [FromQuery] string orderBy)
         {
             try
             {
                 if(search.IsNullOrEmpty()) 
                     return BadRequest("Search term cannot be null or empty.");
-                
-                var genres = await _context.Genres
-                    .Where(g => g.Name.Contains(search) )
-                    .ToListAsync();
-                
+
+                List<Genre> genres = new List<Genre>();
+
+                if ( !orderBy.IsNullOrEmpty() && orderBy.ToLower() == "desc")
+                {
+                    genres = await _context.Genres
+                        .Where(g => g.Name.Contains(search) )
+                        .OrderByDescending(g=>g.Name)
+                        .ToListAsync();
+                }else
+                {
+                    genres = await _context.Genres
+                        .Where(g => g.Name.Contains(search))
+                        .OrderBy(g => g.Name)
+                        .ToListAsync();
+                }
+
+
                 if (genres.Count == 0) return NotFound($"No genres found matching '{search}'.");
                 
                 return Ok(genres);
