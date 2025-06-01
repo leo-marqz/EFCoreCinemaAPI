@@ -1,8 +1,10 @@
 ﻿using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EFCoreCinemaAPI.Controllers
@@ -51,6 +53,47 @@ namespace EFCoreCinemaAPI.Controllers
 
                 // If genre is found, return it with a 200 OK status
                 return Ok(genre);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error!");
+            }
+        }
+
+        [HttpGet("search/{name}/first")]
+        public async Task<ActionResult<Genre>> FindByName(string name)
+        {
+            try
+            {
+                if(name.IsNullOrEmpty()) return BadRequest("Name cannot be null or empty.");
+                var genre = await _context.Genres.FirstOrDefaultAsync(
+                        (g)=>g.Name.Contains(name)
+                    );
+                if (genre is null) return NotFound($"Genre with Name {name} not found!");
+
+                return Ok(genre);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error!");
+            }
+        }
+
+        [HttpGet("search/{search}")]
+        public async Task<ActionResult<IEnumerable<Genre>>> Search(string search)
+        {
+            try
+            {
+                if(search.IsNullOrEmpty()) 
+                    return BadRequest("Search term cannot be null or empty.");
+                
+                var genres = await _context.Genres
+                    .Where(g => g.Name.Contains(search) )
+                    .ToListAsync();
+                
+                if (genres.Count == 0) return NotFound($"No genres found matching '{search}'.");
+                
+                return Ok(genres);
             }
             catch (Exception ex)
             {
