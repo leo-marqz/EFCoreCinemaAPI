@@ -1,6 +1,7 @@
 ﻿using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,25 +19,43 @@ namespace EFCoreCinemaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Genre>> Get()
+        public async Task<ActionResult<IEnumerable<Genre>>> Get()
         {
-            // Retrieve all genres from the database (Simple query)
-            // Using AsNoTracking for read-only queries to improve performance
-            // AsTracking: follows change tracking, which is useful for updates
-            //return await _context.Genres.AsNoTracking().ToListAsync();
-            return await _context.Genres.ToListAsync();
+            try
+            {
+                // Retrieve all genres from the database (Simple query)
+                // Using AsNoTracking for read-only queries to improve performance
+                // AsTracking: follows change tracking, which is useful for updates
+                //return await _context.Genres.AsNoTracking().ToListAsync();
+                var data = await _context.Genres.ToListAsync();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error!");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Genre>> Get(int id)
         {
-            // Retrieve a specific genre by ID
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre == null)
+            try
             {
-                return NotFound();
+                if(id <= 0) return BadRequest("Invalid ID provided.");
+
+                // Retrieve a specific genre by ID from the database
+                var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
+
+                // If genre is not found, return NotFound
+                if (genre is null) return NotFound($"Genre with ID {id} not found.");
+
+                // If genre is found, return it with a 200 OK status
+                return Ok(genre);
             }
-            return genre;
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error!");
+            }
         }
     }
 }
