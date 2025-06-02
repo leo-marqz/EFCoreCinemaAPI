@@ -20,8 +20,12 @@ namespace EFCoreCinemaAPI
                         builder.Configuration.GetConnectionString("DefaultConnection"),
                         (sqlServer) => sqlServer.UseNetTopologySuite()
                 );
+                //para mejorar el performance de solo lectura
+                //para seguimiento de actualizaciones se debe agregar el AsTracking a cada consulta
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
+
+            builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddControllers();
             builder.Services.AddRouting(options=> options.LowercaseUrls = true);

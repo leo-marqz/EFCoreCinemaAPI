@@ -111,5 +111,17 @@ namespace EFCoreCinemaAPI.Controllers
                 return StatusCode(500, "Internal Server Error!");
             }
         }
+
+        [HttpGet("pagination")]
+        public async Task<ActionResult<IEnumerable<Genre>>> Pagination(int page = 1)
+        {
+            var recordsByPage = 3;
+            var pageIndex = (page - 1) * recordsByPage;
+            var genres = await _context.Genres
+                                    .Skip(pageIndex)
+                                    .Take(recordsByPage)
+                                    .ToListAsync();
+            return Ok(genres);
+        }
     }
 }

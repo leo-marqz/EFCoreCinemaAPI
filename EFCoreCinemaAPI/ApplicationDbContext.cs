@@ -23,7 +23,7 @@ namespace EFCoreCinemaAPI
         {
             base.OnModelCreating(modelBuilder);
 
-            //Seeding initial data
+            //Seeding initial data (Create Migration)
             SeedingQueryModule.Seed(modelBuilder);
 
             //modelBuilder.ApplyConfiguration(new GenreConfiguration());
