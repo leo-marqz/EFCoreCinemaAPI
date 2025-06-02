@@ -11,8 +11,8 @@ namespace EFCoreCinemaAPI.Models
         public string PosterUrl { get; set; } // URL de la imagen del poster de la Pelicula
         public DateTime ReleaseDate { get; set; } // Fecha de estreno de la Pelicula
 
-        public HashSet<Genre> Genres { get; set; } //Generos de Peliculas
-        public HashSet<CineRoom> CineRooms { get; set; }
-        public HashSet<MovieActor> MoviesActors { get; set; }
+        public List<Genre> Genres { get; set; } //Generos de Peliculas
+        public List<CineRoom> CineRooms { get; set; }
+        public List<MovieActor> MoviesActors { get; set; }
     }
 }
