@@ -1,5 +1,6 @@
-﻿using EFCoreCinemaAPI.DTOs;
-using EFCoreCinemaAPI.Models;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using EFCoreCinemaAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -13,13 +14,15 @@ namespace EFCoreCinemaAPI.Controllers
     public class ActorsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ActorsController(ApplicationDbContext context)
+        public ActorsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("using-select")]
         public async Task<ActionResult<IEnumerable<ActorDTO>>> Get()
         {
             var actors = await _context.Actors
@@ -29,6 +32,16 @@ namespace EFCoreCinemaAPI.Controllers
                                 Name = a.Name
                             })
                             .ToListAsync();
+            return Ok(actors);
+        }
+
+        [HttpGet("using-automapper")]
+        public async Task<ActionResult> Gets()
+        {
+            var actors = await _context.Actors
+                .ProjectTo<ActorDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
             return Ok(actors);
         }
     }
