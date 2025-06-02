@@ -26,6 +26,7 @@ namespace EFCoreCinemaAPI.Controllers
             //tambien se puede hacer una confiracion en Program sobre AddControllers()
             var movie = await _context.Movies
                                     .Include(m => m.Genres)
+                                    .Include(m => m.CineRooms)
                                     .FirstOrDefaultAsync(m => m.Id == id);
             if(movie is null)
             {
