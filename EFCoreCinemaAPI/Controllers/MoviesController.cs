@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +27,17 @@ namespace EFCoreCinemaAPI.Controllers
             //tambien se puede hacer una confiracion en Program sobre AddControllers()
             var movie = await _context.Movies
                                     .Include(m => m.Genres)
-                                    .Include(m => m.CineRooms)
+                                    .Include(m => m.CineRooms) // Incluir las salas de cine asociadas
+                                        .ThenInclude(cr=>cr.Cine) // Incluir el cine asociado a cada sala
+                                    .Include(m => m.MoviesActors) // Incluir los actores asociados a la película
+                                        .ThenInclude(ma => ma.Actor) // Incluir los actores asociados a la película
                                     .FirstOrDefaultAsync(m => m.Id == id);
             if(movie is null)
             {
                 return NotFound();
             }
+
+            var movieDTO = _mapper.Map<MovieDTO>(movie);
 
             return Ok(movie);
         }
