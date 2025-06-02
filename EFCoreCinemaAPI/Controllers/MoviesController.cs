@@ -3,6 +3,7 @@ using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EFCoreCinemaAPI.Controllers
@@ -38,6 +39,8 @@ namespace EFCoreCinemaAPI.Controllers
             }
 
             var movieDTO = _mapper.Map<MovieDTO>(movie);
+
+            movieDTO.Cines = movieDTO.Cines.DistinctBy(c => c.Id).ToList(); // Eliminar cines duplicados
 
             return Ok(movie);
         }
