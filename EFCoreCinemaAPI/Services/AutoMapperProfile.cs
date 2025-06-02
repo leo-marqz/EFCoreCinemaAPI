@@ -20,7 +20,7 @@ namespace EFCoreCinemaAPI.Services
             //generos no se mapea por que es una relacion simple
             CreateMap<Movie, MovieDTO>()
                 .ForMember(dto => dto.Cines, ent => ent.MapFrom(prop => prop.CineRooms.Select(cr => cr.Cine)))
-                .ForMember(dto => dto.Actores, ent => ent.MapFrom(prop => prop.MoviesActors.Select(ma => ma.Actor));
+                .ForMember(dto => dto.Actores, ent => ent.MapFrom(prop => prop.MoviesActors.Select(ma => ma.Actor)));
         }
     }
 }
