@@ -28,13 +28,13 @@ namespace EFCoreCinemaAPI.Controllers
             //usar DTO para evitar el ciclo infinito debido a propiedades de navegacion
             //tambien se puede hacer una confiracion en Program sobre AddControllers()
             var movie = await _context.Movies
-                                    .Include(m => m.Genres.OrderByDescending(g=>g.Name))
+                                    .Include(m => m.Genres.OrderByDescending(g => g.Name))
                                     .Include(m => m.CineRooms) // Incluir las salas de cine asociadas
-                                        .ThenInclude(cr=>cr.Cine) // Incluir el cine asociado a cada sala
-                                    .Include(m => m.MoviesActors.Where(pa=>pa.Actor.DateOfBirth.Value.Year > 1980)) // Incluir los actores asociados a la película
+                                        .ThenInclude(cr => cr.Cine) // Incluir el cine asociado a cada sala
+                                    .Include(m => m.MoviesActors.Where(pa => pa.Actor.DateOfBirth.Value.Year > 1980)) // Incluir los actores asociados a la película
                                         .ThenInclude(ma => ma.Actor) // Incluir los actores asociados a la película
                                     .FirstOrDefaultAsync(m => m.Id == id);
-            if(movie is null)
+            if (movie is null)
             {
                 return NotFound();
             }
@@ -53,9 +53,9 @@ namespace EFCoreCinemaAPI.Controllers
             var movie = await _context.Movies.ProjectTo<MovieDTO>(_mapper.ConfigurationProvider)
                                     .FirstOrDefaultAsync(mv => mv.Id == id);
 
-            if(movie is null) return NotFound();
+            if (movie is null) return NotFound();
 
-            movie.Cines = movie.Cines.DistinctBy(x=>x.Id).ToList();
+            movie.Cines = movie.Cines.DistinctBy(x => x.Id).ToList();
 
             return Ok(movie);
         }
@@ -67,12 +67,12 @@ namespace EFCoreCinemaAPI.Controllers
             {
                 Id = mv.Id,
                 Title = mv.Title,
-                Genres = mv.Genres.OrderBy((gr)=>gr.Name).ToList(),
+                Genres = mv.Genres.OrderBy((gr) => gr.Name).ToList(),
                 ActorsCount = mv.MoviesActors.Count(),
-                CinesCount = mv.CineRooms.Select((cr)=>cr.CineId).Distinct().Count()
+                CinesCount = mv.CineRooms.Select((cr) => cr.CineId).Distinct().Count()
             }).FirstOrDefaultAsync((mv) => mv.Id == id);
 
-            if(movie is null) return NotFound();
+            if (movie is null) return NotFound();
 
             return Ok(movie);
         }
@@ -83,9 +83,9 @@ namespace EFCoreCinemaAPI.Controllers
             var movie = await _context.Movies.AsTracking().FirstOrDefaultAsync((mv) => mv.Id == id);
             await _context.Entry(movie).Collection((mv) => mv.Genres).LoadAsync();
 
-            if(movie is null) return NotFound();
+            if (movie is null) return NotFound();
 
-            var genres  = await _context.Entry(movie).Collection((mv)=>mv.Genres).Query().CountAsync();
+            var genres = await _context.Entry(movie).Collection((mv) => mv.Genres).Query().CountAsync();
 
             var movieDto = _mapper.Map<MovieDTO>(movie);
 
@@ -95,5 +95,27 @@ namespace EFCoreCinemaAPI.Controllers
                 genresCount = genres
             });
         }
-     }
+
+        [HttpGet("lazy-loading/{id:int}")]
+        public async Task<ActionResult> GetByIdWithLazyLoading(int id)
+        {
+            var movie = await _context.Movies.AsTracking()
+                                .FirstOrDefaultAsync((mv) => mv.Id == id);
+            if(movie is null)
+            {
+                return NotFound();
+            }
+
+            // Lazy loading requires virtual navigation properties in the model
+            // se activa el lazy loading cuando se detecta que se necesitan los datos relacionados
+            // en este MovieDTO, las propiedades de navegación son virtuales
+            var movieDto = _mapper.Map<MovieDTO>(movie);
+
+            // Lazy loading will automatically load the related entities when accessed
+            movieDto.Cines = movieDto.Cines.DistinctBy(c => c.Id).ToList(); 
+
+            return Ok(movieDto);
+        }
+
+    }
 }
