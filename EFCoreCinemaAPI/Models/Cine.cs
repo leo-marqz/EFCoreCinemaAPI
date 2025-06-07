@@ -11,7 +11,7 @@ namespace EFCoreCinemaAPI.Models
         public Point Location { get; set; }
 
         //Navigation property
-        public virtual CineOffer CineOffer { get; set; }
-        public virtual HashSet<CineRoom> CineRooms { get; set; }
+        public CineOffer CineOffer { get; set; }
+        public HashSet<CineRoom> CineRooms { get; set; }
     }
 }
