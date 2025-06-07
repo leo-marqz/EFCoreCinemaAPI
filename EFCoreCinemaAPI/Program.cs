@@ -23,7 +23,7 @@ namespace EFCoreCinemaAPI
                 //para mejorar el performance de solo lectura
                 //para seguimiento de actualizaciones se debe agregar el AsTracking a cada consulta
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                options.UseLazyLoadingProxies(); // Habilitar Lazy Loading
+                //options.UseLazyLoadingProxies(); // Habilitar Lazy Loading
             });
 
             builder.Services.AddAutoMapper(typeof(Program));

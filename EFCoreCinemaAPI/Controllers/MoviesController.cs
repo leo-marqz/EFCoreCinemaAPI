@@ -22,7 +22,7 @@ namespace EFCoreCinemaAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("eager-loading/{id:int}")]
         public async Task<ActionResult<Movie>> Get(int id)
         {
             //usar DTO para evitar el ciclo infinito debido a propiedades de navegacion
@@ -77,7 +77,7 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(movie);
         }
 
-        [HttpGet("explicit-load/{id:int}")]
+        [HttpGet("explicit-loading/{id:int}")]
         public async Task<ActionResult> GetByIdWithExplicitLoad(int id)
         {
             var movie = await _context.Movies.AsTracking().FirstOrDefaultAsync((mv) => mv.Id == id);
