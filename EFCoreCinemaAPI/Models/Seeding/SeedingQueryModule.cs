@@ -101,7 +101,36 @@ namespace EFCoreCinemaAPI.Models.Seeding
             builder.Entity<CineRoom>()
                 .HasData(cineRoomCinemax2D, cineRoomCinemax3D, cineRoomCinemaxCXC);
 
-            
+            var avengersEndGame = new Movie
+            {
+                Id = 1,
+                Title = "Avengers: Endgame",
+                ReleaseDate = new DateTime(2019, 4, 26),
+                IsOnSchedule = true,
+                PosterUrl = "https://example.com/posters/avengers-endgame.jpg"
+            };
+
+            var spiderManNoWayHome = new Movie
+            {
+                Id = 2,
+                Title = "SpiderMan: No Way Home",
+                ReleaseDate = new DateTime(2021, 12, 17),
+                IsOnSchedule = true,
+                PosterUrl = "https://example.com/posters/spiderman-no-way-home.jpg"
+            };
+
+            var blackWidow = new Movie
+            {
+                Id = 3,
+                Title = "Black Widow",
+                ReleaseDate = new DateTime(2021, 7, 9),
+                IsOnSchedule = false,
+                PosterUrl = "https://example.com/posters/black-widow.jpg"
+            };
+
+            builder.Entity<Movie>()
+                .HasData(avengersEndGame, spiderManNoWayHome, blackWidow);
+
         }   
         
     }

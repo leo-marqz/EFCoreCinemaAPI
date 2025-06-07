@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -45,25 +46,54 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(movie);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<MovieDTO>> Post(CreateMovieDTO request)
+        //projectTo e Eager Loading
+        [HttpGet("withProjectTo/{id:int}")]
+        public async Task<ActionResult> GetByIdUsingProjectTo(int id)
         {
-            if (request is null) return NotFound();
-            var movie = new Movie
-            {
-                Title = request.Title,
-                IsOnSchedule = request.IsOnSchedule,
-                PosterUrl = request.PosterUrl,
-                ReleaseDate = request.ReleaseDate
-            };
+            var movie = await _context.Movies.ProjectTo<MovieDTO>(_mapper.ConfigurationProvider)
+                                    .FirstOrDefaultAsync(mv => mv.Id == id);
 
-            var result = await _context.Movies.AddAsync(movie);
-            await _context.SaveChangesAsync();
+            if(movie is null) return NotFound();
 
-            var movieDTO = _mapper.Map<MovieDTO>(result);
+            movie.Cines = movie.Cines.DistinctBy(x=>x.Id).ToList();
 
-            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movieDTO);
-
+            return Ok(movie);
         }
-    }
+
+        [HttpGet("using-select/{id:int}")]
+        public async Task<ActionResult> GetByIdUsingSelect(int id)
+        {
+            var movie = await _context.Movies.Select((mv) => new
+            {
+                Id = mv.Id,
+                Title = mv.Title,
+                Genres = mv.Genres.OrderBy((gr)=>gr.Name).ToList(),
+                ActorsCount = mv.MoviesActors.Count(),
+                CinesCount = mv.CineRooms.Select((cr)=>cr.CineId).Distinct().Count()
+            }).FirstOrDefaultAsync((mv) => mv.Id == id);
+
+            if(movie is null) return NotFound();
+
+            return Ok(movie);
+        }
+
+        [HttpGet("explicit-load/{id:int}")]
+        public async Task<ActionResult> GetByIdWithExplicitLoad(int id)
+        {
+            var movie = await _context.Movies.AsTracking().FirstOrDefaultAsync((mv) => mv.Id == id);
+            await _context.Entry(movie).Collection((mv) => mv.Genres).LoadAsync();
+
+            if(movie is null) return NotFound();
+
+            var genres  = await _context.Entry(movie).Collection((mv)=>mv.Genres).Query().CountAsync();
+
+            var movieDto = _mapper.Map<MovieDTO>(movie);
+
+            return Ok(new
+            {
+                movie = movieDto,
+                genresCount = genres
+            });
+        }
+     }
 }
