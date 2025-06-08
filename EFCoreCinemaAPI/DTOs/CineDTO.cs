@@ -1,6 +1,6 @@
 ﻿namespace EFCoreCinemaAPI.DTOs
 {
-    public class CineDTO
+    public class CineDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

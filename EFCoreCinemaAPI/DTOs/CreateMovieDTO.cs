@@ -2,7 +2,7 @@
 
 namespace EFCoreCinemaAPI.DTOs
 {
-    public class CreateMovieDTO
+    public class CreateMovieDto
     {
         public string Title { get; set; } 
         public bool IsOnSchedule { get; set; } 

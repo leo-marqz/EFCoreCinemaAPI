@@ -2,13 +2,13 @@
 
 namespace EFCoreCinemaAPI.DTOs
 {
-    public class MovieDTO
+    public class MovieDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
 
-        public ICollection<GenreDTO> Genres { get; set; } = new List<GenreDTO>();
-        public ICollection<CineDTO> Cines { get; set; } = new List<CineDTO>();
-        public ICollection<ActorDTO> Actores { get; set; } = new List<ActorDTO>();
+        public ICollection<GenreDto> Genres { get; set; } = new List<GenreDto>();
+        public ICollection<CineDto> Cines { get; set; } = new List<CineDto>();
+        public ICollection<ActorDto> Actores { get; set; } = new List<ActorDto>();
     }
 }

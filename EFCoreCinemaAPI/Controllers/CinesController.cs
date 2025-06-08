@@ -28,11 +28,11 @@ namespace EFCoreCinemaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CineDTO>>> Get()
+        public async Task<ActionResult<IEnumerable<CineDto>>> Get()
         {
             // Retrieve all cinemas from the database
             var data = await _context.Cines
-                                .ProjectTo<CineDTO>(_mapper.ConfigurationProvider)
+                                .ProjectTo<CineDto>(_mapper.ConfigurationProvider)
                                 .ToListAsync();
             return Ok(data);
         }

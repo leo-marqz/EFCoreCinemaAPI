@@ -4,6 +4,8 @@ using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,7 +41,7 @@ namespace EFCoreCinemaAPI.Controllers
                 return NotFound();
             }
 
-            var movieDTO = _mapper.Map<MovieDTO>(movie);
+            var movieDTO = _mapper.Map<MovieDto>(movie);
 
             movieDTO.Cines = movieDTO.Cines.DistinctBy(c => c.Id).ToList(); // Eliminar cines duplicados
 
@@ -50,7 +52,7 @@ namespace EFCoreCinemaAPI.Controllers
         [HttpGet("withProjectTo/{id:int}")]
         public async Task<ActionResult> GetByIdUsingProjectTo(int id)
         {
-            var movie = await _context.Movies.ProjectTo<MovieDTO>(_mapper.ConfigurationProvider)
+            var movie = await _context.Movies.ProjectTo<MovieDto>(_mapper.ConfigurationProvider)
                                     .FirstOrDefaultAsync(mv => mv.Id == id);
 
             if (movie is null) return NotFound();
@@ -87,7 +89,7 @@ namespace EFCoreCinemaAPI.Controllers
 
             var genres = await _context.Entry(movie).Collection((mv) => mv.Genres).Query().CountAsync();
 
-            var movieDto = _mapper.Map<MovieDTO>(movie);
+            var movieDto = _mapper.Map<MovieDto>(movie);
 
             return Ok(new
             {
@@ -109,7 +111,7 @@ namespace EFCoreCinemaAPI.Controllers
             // Lazy loading requires virtual navigation properties in the model
             // se activa el lazy loading cuando se detecta que se necesitan los datos relacionados
             // en este MovieDTO, las propiedades de navegación son virtuales
-            var movieDto = _mapper.Map<MovieDTO>(movie);
+            var movieDto = _mapper.Map<MovieDto>(movie);
 
             // Lazy loading will automatically load the related entities when accessed
             movieDto.Cines = movieDto.Cines.DistinctBy(c => c.Id).ToList(); 
@@ -117,13 +119,13 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(movieDto);
         }
 
-        [HttpGet("group-by-release-date")]
+        [HttpGet("group-by-is-on-schedule")]
         public async Task<ActionResult> GetGroupByReleaseDate()
         {
-            var movies = await _context.Movies.GroupBy((mv)=>mv.ReleaseDate)
+            var movies = await _context.Movies.GroupBy((mv)=>mv.IsOnSchedule)
                                     .Select((mv)=>new
                                     {
-                                        ReleaseDate = mv.Key,
+                                        IsOnSchedule = mv.Key,
                                         Count = mv.Count(),
                                         Movies = mv.ToList()
                                     }).ToListAsync();
@@ -144,5 +146,40 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(movies);
         }
 
+        [HttpGet("filter")]
+        public async Task<ActionResult> FilterMovies([FromQuery] MovieFiltersDto filters)
+        {
+            var moviesQueryable = _context.Movies.AsQueryable();
+
+            if(filters.GenreId > 0)
+            {
+                moviesQueryable = moviesQueryable
+                                        .Where((mv) => mv.Genres.Select((gr) => gr.Id)
+                                        .Contains(filters.GenreId));
+            }
+
+            if (!string.IsNullOrEmpty(filters.Title))
+            {
+                moviesQueryable = moviesQueryable.Where(m => m.Title.Contains(filters.Title));
+            }
+
+            //En Cartelera o no
+            if (filters.IsOnSchedule)
+            {
+                moviesQueryable = moviesQueryable.Where((mv) => mv.IsOnSchedule);
+            }
+
+            //Proximos Estrenos
+            if (filters.IsUpcomingRelease)
+            {
+                var today = DateTime.Today;
+                moviesQueryable = moviesQueryable.Where((mv) => mv.ReleaseDate > today);
+            }
+
+            var movies = await moviesQueryable.Include((mv)=>mv.Genres)
+                                    .ToListAsync();
+
+            return Ok( _mapper.Map<List<MovieDto>>(movies) );
+        }
     }
 }

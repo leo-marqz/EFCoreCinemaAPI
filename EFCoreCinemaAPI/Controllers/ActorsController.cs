@@ -23,10 +23,10 @@ namespace EFCoreCinemaAPI.Controllers
         }
 
         [HttpGet("using-select")]
-        public async Task<ActionResult<IEnumerable<ActorDTO>>> Get()
+        public async Task<ActionResult<IEnumerable<ActorDto>>> Get()
         {
             var actors = await _context.Actors
-                            .Select(a=> new ActorDTO
+                            .Select(a=> new ActorDto
                             {
                                 Id = a.Id,
                                 Name = a.Name
@@ -39,7 +39,7 @@ namespace EFCoreCinemaAPI.Controllers
         public async Task<ActionResult> Gets()
         {
             var actors = await _context.Actors
-                .ProjectTo<ActorDTO>(_mapper.ConfigurationProvider)
+                .ProjectTo<ActorDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return Ok(actors);
