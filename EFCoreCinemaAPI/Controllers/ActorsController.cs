@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EFCoreCinemaAPI.DTOs;
+using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -43,6 +44,15 @@ namespace EFCoreCinemaAPI.Controllers
                 .ToListAsync();
 
             return Ok(actors);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post(CreateActorDto request)
+        {
+            var actor = _mapper.Map<Actor>(request);
+            _context.Add(actor);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = actor.Id }, actor);
         }
     }
 }

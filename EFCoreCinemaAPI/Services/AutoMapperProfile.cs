@@ -44,6 +44,8 @@ namespace EFCoreCinemaAPI.Services
                             (dto) => dto.MapFrom((prop) => prop.CineRooms.Select((id) => new CineRoom { Id = id })));
 
             CreateMap<CreateMovieActorDto, MovieActor>();
+
+            CreateMap<CreateActorDto, Actor>();
         }
     }
 }
