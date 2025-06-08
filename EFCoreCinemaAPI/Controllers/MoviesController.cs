@@ -117,5 +117,32 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(movieDto);
         }
 
+        [HttpGet("group-by-release-date")]
+        public async Task<ActionResult> GetGroupByReleaseDate()
+        {
+            var movies = await _context.Movies.GroupBy((mv)=>mv.ReleaseDate)
+                                    .Select((mv)=>new
+                                    {
+                                        ReleaseDate = mv.Key,
+                                        Count = mv.Count(),
+                                        Movies = mv.ToList()
+                                    }).ToListAsync();
+            return Ok(movies);
+        }
+
+        [HttpGet("group-by-genres")]
+        public async Task<ActionResult> GetGroupByGenres()
+        {
+            var movies = await _context.Movies.GroupBy((mv)=> mv.Genres.Count())
+                                    .Select((mv)=>new
+                                    {
+                                        Count = mv.Key,
+                                        Title = mv.Select((mv)=>mv.Title),
+                                        Genre = mv.Select((mv)=>mv.Genres).SelectMany((gr)=>gr)
+                                                    .Select((gr)=>gr.Name)
+                                    }).ToListAsync();
+            return Ok(movies);
+        }
+
     }
 }
