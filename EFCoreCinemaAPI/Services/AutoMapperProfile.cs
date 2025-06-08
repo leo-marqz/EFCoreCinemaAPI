@@ -34,6 +34,16 @@ namespace EFCoreCinemaAPI.Services
             CreateMap<CreateCineOfferDto, CineOffer>();
             CreateMap<CreateCineRoomDto, CineRoom>();
 
+            CreateMap<CreateMovieDto, Movie>()
+                .ForMember(
+                            (ent) => ent.Genres,
+                            (dto) => dto.MapFrom((prop) => prop.Genres.Select((id) => new Genre { Id = id }))
+                           )
+                .ForMember(
+                            (ent) => ent.CineRooms,
+                            (dto) => dto.MapFrom((prop) => prop.CineRooms.Select((id) => new CineRoom { Id = id })));
+
+            CreateMap<CreateMovieActorDto, MovieActor>();
         }
     }
 }

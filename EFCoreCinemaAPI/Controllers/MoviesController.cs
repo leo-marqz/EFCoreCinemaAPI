@@ -24,6 +24,29 @@ namespace EFCoreCinemaAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Movie>> Post(CreateMovieDto request)
+        {
+            var movie = _mapper.Map<Movie>(request);
+
+            // con esto le digo a EF que no quiero modificar los generos,
+            // solo agregarlos al registro de nueva pelicula
+            movie.Genres.ForEach((genre)=> _context.Entry(genre).State = EntityState.Unchanged);
+            movie.CineRooms.ForEach((cineRoom) => _context.Entry(cineRoom).State = EntityState.Unchanged);
+
+            if(movie.MoviesActors is not null)
+            {
+                for(int i =0; i < movie.MoviesActors.Count; i++)
+                {
+                    movie.MoviesActors[i].Order = i + 1; // Asignar un orden a los actores
+                }
+            }
+            _context.Add(movie);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+        }
+
         [HttpGet("eager-loading/{id:int}")]
         public async Task<ActionResult<Movie>> Get(int id)
         {
@@ -142,7 +165,8 @@ namespace EFCoreCinemaAPI.Controllers
                                         Title = mv.Select((mv)=>mv.Title),
                                         Genre = mv.Select((mv)=>mv.Genres).SelectMany((gr)=>gr)
                                                     .Select((gr)=>gr.Name)
-                                    }).ToListAsync();
+                                    })
+                                    .ToListAsync();
             return Ok(movies);
         }
 

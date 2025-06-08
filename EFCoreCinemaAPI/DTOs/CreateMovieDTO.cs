@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EFCoreCinemaAPI.DTOs
 {
@@ -8,6 +9,10 @@ namespace EFCoreCinemaAPI.DTOs
         public bool IsOnSchedule { get; set; } 
         public string PosterUrl { get; set; } 
         public DateTime ReleaseDate { get; set; }
+
+        public List<int> Genres { get; set; }
+        public List<int> CineRooms { get; set; }
+        public List<CreateMovieActorDto> MoviesActors { get; set; }
 
     }
 }

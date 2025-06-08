@@ -2,7 +2,6 @@
 using AutoMapper.QueryableExtensions;
 using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
