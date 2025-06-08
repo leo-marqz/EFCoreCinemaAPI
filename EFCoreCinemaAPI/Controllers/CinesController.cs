@@ -55,5 +55,57 @@ namespace EFCoreCinemaAPI.Controllers
                                     }).ToListAsync();
             return Ok(cines);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Post() //create new cine
+        {
+            //Google Maps: first parameter is latitude, second is longitude
+            var latitudeY = 13.68066; // Example latitude
+            var longitudeX = -89.2680663; // Example longitude
+
+            // Example of creating a new cinema with a location
+            // 4326 is the SRID for WGS 84
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+            var myLocation = geometryFactory.CreatePoint(new Coordinate(longitudeX, latitudeY));
+
+            var cine = new Cine
+            {
+                Name = "Pelis Plus",
+                Location = myLocation,
+                CineOffer = new CineOffer
+                {
+                    DiscountPercentage = 10,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(30)
+                },
+                CineRooms = new HashSet<CineRoom>
+                {
+                    new CineRoom
+                    {
+                        Price = 30.50m,
+                        CineRoomType = CineRoomType.CRT_CXC
+                    },
+                    new CineRoom
+                    {
+                        Price = 25.00m,
+                        CineRoomType = CineRoomType.CRT_3D
+                    }
+                }
+            };
+
+            _context.Add(cine);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = cine.Id }, _mapper.Map<CineDto>(cine));
+        }
+
+        [HttpPost("create-cine-with-dto")]
+        public async Task<ActionResult> Post(CreateCineDto request)
+        {
+            var cine = _mapper.Map<Cine>(request);
+            _context.Add(cine);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = cine.Id }, _mapper.Map<CineDto>(cine));
+        }
     }
 }
