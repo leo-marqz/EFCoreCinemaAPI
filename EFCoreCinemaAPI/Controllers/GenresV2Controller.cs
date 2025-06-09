@@ -118,8 +118,26 @@ namespace EFCoreCinemaAPI.Controllers
         public async Task<ActionResult> ShowNotDeleted()
         {
             // Consulta para obtener géneros que no están eliminados lógicamente
+            //var genres = await context.Genres.Where(gr => !gr.IsDeleted).ToListAsync();
             var genres = await context.Genres.Where(gr=>gr.IsDeleted == false).ToListAsync();
             return Ok(genres);
         }
+
+        [HttpPost("restore/{id:int}")]
+        public async Task<ActionResult> ReStore(int id)
+        {
+            var genre = await context.Genres.AsTracking()
+                            .IgnoreQueryFilters() // Ignora los filtros de consulta globales (softdelete)
+                            .FirstOrDefaultAsync(g => g.Id == id);
+            if (genre == null)
+            {
+                return NotFound();
+            }
+            genre.IsDeleted = false;
+            await context.SaveChangesAsync();
+
+            return Ok(new { Message = "Genre restored successfully." });
+        }
+
     }
 }

@@ -11,6 +11,9 @@ namespace EFCoreCinemaAPI.Models.Configurations
             builder.Property(g=>g.Name)
                 .HasMaxLength(25)
                 .IsRequired();
+
+            //Nos ayudara a evitar que se muestren los géneros eliminados lógicamente
+            builder.HasQueryFilter(g => !g.IsDeleted);
         }
     }
 }
