@@ -2,6 +2,7 @@
 using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace EFCoreCinemaAPI.Controllers
@@ -59,6 +60,24 @@ namespace EFCoreCinemaAPI.Controllers
                 Count = request.Length,
                 Message = "Genres added successfully."
             });
+        }
+
+        [HttpPost("add-number-two/{id:int}")]
+        public async Task<ActionResult> AddNumbertwo(int id)
+        {
+            // AsTracking permite que el objeto se rastree y se pueda modificar (modelo conectado)
+            var genre = await context.Genres.AsTracking().FirstOrDefaultAsync(g => g.Id == id);
+
+            if(genre == null)
+            {
+                return NotFound();
+            }
+
+            genre.Name += " 2"; // Modifica el nombre del género
+
+            await context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

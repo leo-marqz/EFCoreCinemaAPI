@@ -46,6 +46,7 @@ namespace EFCoreCinemaAPI.Services
             CreateMap<CreateMovieActorDto, MovieActor>();
 
             CreateMap<CreateActorDto, Actor>();
+            CreateMap<UpdateActorDto, Actor>();
         }
     }
 }

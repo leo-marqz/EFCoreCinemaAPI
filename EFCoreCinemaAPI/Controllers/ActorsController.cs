@@ -27,7 +27,7 @@ namespace EFCoreCinemaAPI.Controllers
         public async Task<ActionResult<IEnumerable<ActorDto>>> Get()
         {
             var actors = await _context.Actors
-                            .Select(a=> new ActorDto
+                            .Select(a => new ActorDto
                             {
                                 Id = a.Id,
                                 Name = a.Name
@@ -53,6 +53,42 @@ namespace EFCoreCinemaAPI.Controllers
             _context.Add(actor);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(Get), new { id = actor.Id }, actor);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, UpdateActorDto updateActorDto)
+        {
+            var actordb = await _context.Actors.AsTracking().FirstOrDefaultAsync(a => a.Id == id);
+            if (actordb == null)
+            {
+                return NotFound();
+            }
+            //aqui mapper no crea un nuevo objeto, sino que actualiza el existente (actordb)
+            actordb = _mapper.Map(updateActorDto, actordb);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPut("objeto-desconectado/{id:int}")]
+        public async Task<ActionResult> PutDisconnected(int id, UpdateActorDto updateActorDto)
+        {
+            var actordb = await _context.Actors.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (actordb is null)
+            {
+                return NotFound();
+            }
+
+            //objeto desconectado - se actualizado todo - diferente al modelo conectado
+            var actor = _mapper.Map<Actor>(updateActorDto);
+
+            actor.Id = id; //asignar el id al objeto desconectado
+            //marcar como modificado
+            //_context.Entry(actor).State = EntityState.Modified;
+            _context.Update(actor); //esto marca el objeto como modificado
+            await _context.SaveChangesAsync();
+            return Ok(actor);
         }
     }
 }
