@@ -77,7 +77,7 @@ namespace EFCoreCinemaAPI.Controllers
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(30)
                 },
-                CineRooms = new HashSet<CineRoom>
+                CineRooms = new List<CineRoom>
                 {
                     new CineRoom
                     {
@@ -105,6 +105,44 @@ namespace EFCoreCinemaAPI.Controllers
             _context.Add(cine);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(Get), new { id = cine.Id }, _mapper.Map<CineDto>(cine));
+        }
+
+        [HttpGet("one/{id:int}")]
+        public async Task<ActionResult<CineDto>> Get(int id)
+        {
+            // Retrieve a specific cinema by ID
+            var cine = await _context.Cines
+                                .Include(c => c.CineOffer)
+                                .Include(c => c.CineRooms)
+                                .FirstOrDefaultAsync(c => c.Id == id);
+            if (cine is null)
+            {
+                return NotFound();
+            }
+
+            cine.Location = null; // Exclude the location from the response if not needed
+
+            return Ok(cine);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, CreateCineDto createCineDto)
+        {
+            Cine cinedb = await _context.Cines.AsTracking()
+                            .Include((cn)=> cn.CineOffer)
+                            .Include((cn) => cn.CineRooms)
+                            .FirstOrDefaultAsync(c => c.Id == id);
+            if(cinedb is null)
+            {
+                return NotFound();
+            }
+
+            // Update the cinema's properties
+            cinedb = _mapper.Map(createCineDto, cinedb);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(_mapper.Map<CineDto>(cinedb));
         }
     }
 }

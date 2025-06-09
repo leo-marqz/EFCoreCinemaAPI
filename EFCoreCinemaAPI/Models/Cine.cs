@@ -12,6 +12,6 @@ namespace EFCoreCinemaAPI.Models
 
         //Navigation property
         public CineOffer CineOffer { get; set; }
-        public HashSet<CineRoom> CineRooms { get; set; }
+        public List<CineRoom> CineRooms { get; set; }
     }
 }

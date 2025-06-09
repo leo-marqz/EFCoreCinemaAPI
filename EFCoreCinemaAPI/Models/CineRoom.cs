@@ -11,6 +11,6 @@ namespace EFCoreCinemaAPI.Models
         public int CineId { get; set; }
         public Cine Cine { get; set; }
 
-        public HashSet<Movie> Movies { get; set; }
+        public List<Movie> Movies { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EFCoreCinemaAPI.DTOs
 {
@@ -9,6 +10,6 @@ namespace EFCoreCinemaAPI.DTOs
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public CreateCineOfferDto CineOffer { get; set; }
-        public CreateCineRoomDto[] CineRoom { get; set; }
+        public List<CreateCineRoomDto> CineRooms { get; set; }
     }
 }
