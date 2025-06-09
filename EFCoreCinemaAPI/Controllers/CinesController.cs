@@ -144,5 +144,7 @@ namespace EFCoreCinemaAPI.Controllers
 
             return Ok(_mapper.Map<CineDto>(cinedb));
         }
+
+
     }
 }

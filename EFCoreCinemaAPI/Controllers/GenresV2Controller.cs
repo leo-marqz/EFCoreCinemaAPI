@@ -3,6 +3,7 @@ using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EFCoreCinemaAPI.Controllers
@@ -68,7 +69,7 @@ namespace EFCoreCinemaAPI.Controllers
             // AsTracking permite que el objeto se rastree y se pueda modificar (modelo conectado)
             var genre = await context.Genres.AsTracking().FirstOrDefaultAsync(g => g.Id == id);
 
-            if(genre == null)
+            if (genre == null)
             {
                 return NotFound();
             }
@@ -78,6 +79,47 @@ namespace EFCoreCinemaAPI.Controllers
             await context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var genre = await context.Genres.FirstOrDefaultAsync(gr => gr.Id == id);
+            if (genre == null)
+            {
+                return NotFound();
+            }
+
+            context.Remove(genre);
+            await context.SaveChangesAsync();
+
+            return Ok();
+
+        }
+
+        [HttpDelete("softdelete/{id:int}")]
+        public async Task<ActionResult> SoftDelete(int id)
+        {
+            //borrado lógico
+            var genre = await context.Genres.AsTracking().FirstOrDefaultAsync(g => g.Id == id);
+            if (genre == null)
+            {
+                return NotFound();
+            }
+
+            genre.IsDeleted = true; // Marca el género como eliminado lógicamente
+            await context.SaveChangesAsync();
+
+            return Ok();
+
+        }
+
+        [HttpGet("show-not-deleted")]
+        public async Task<ActionResult> ShowNotDeleted()
+        {
+            // Consulta para obtener géneros que no están eliminados lógicamente
+            var genres = await context.Genres.Where(gr=>gr.IsDeleted == false).ToListAsync();
+            return Ok(genres);
         }
     }
 }
