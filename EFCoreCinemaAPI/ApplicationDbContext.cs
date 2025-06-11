@@ -28,6 +28,8 @@ namespace EFCoreCinemaAPI
 
             //modelBuilder.ApplyConfiguration(new GenreConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            //modelBuilder.Entity<Log>().Property(lg => lg.Id).ValueGeneratedNever();
         }
 
         public DbSet<Genre> Genres { get; set; }
@@ -37,5 +39,7 @@ namespace EFCoreCinemaAPI
         public DbSet<CineRoom> CineRooms { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieActor> MoviesActors { get; set; }
+
+        public DbSet<Log> Logs { get; set; }
     }
 }

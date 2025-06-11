@@ -25,6 +25,9 @@ namespace EFCoreCinemaAPI.Controllers
         {
             try
             {
+                _context.Logs.Add( new Log { Id = Guid.NewGuid(), Message = "Fetching all genres - GenresController.Get()"} );
+                await _context.SaveChangesAsync();
+
                 // Retrieve all genres from the database (Simple query)
                 // Using AsNoTracking for read-only queries to improve performance
                 // AsTracking: follows change tracking, which is useful for updates
