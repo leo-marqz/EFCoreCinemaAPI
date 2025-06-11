@@ -12,11 +12,13 @@ namespace EFCoreCinemaAPI.Models.Configurations
                 .HasMaxLength(25)
                 .IsRequired();
 
-            //Nos aseguramos de que el campo Name sea único en la base de datos
-            builder.HasIndex(g => g.Name).IsUnique();
-
             //Nos ayudara a evitar que se muestren los géneros eliminados lógicamente
             builder.HasQueryFilter(g => !g.IsDeleted);
+
+            //Nos aseguramos de que el campo Name sea único en la base de datos
+            // y que no se pueda insertar un género con el mismo nombre si ya existe uno con IsDeleted = false
+            builder.HasIndex(g => g.Name).IsUnique().HasFilter("IsDeleted = 'false'");
+
         }
     }
 }
