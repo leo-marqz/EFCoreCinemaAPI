@@ -38,6 +38,9 @@ namespace EFCoreCinemaAPI
                 .ToSqlQuery("SELECT Id, Name FROM Cines") // Using a raw SQL query to define the entity
                 .HasNoKey() // Configuring a keyless entity
                 .ToView(null); // This will not create a table, but allows querying as if it were a table
+
+            // Configuring Metrics as a keyless view
+            modelBuilder.Entity<Metric>().HasNoKey().ToView("Metrics"); 
         }
 
         public DbSet<Genre> Genres { get; set; }
@@ -52,5 +55,7 @@ namespace EFCoreCinemaAPI
 
         //Esto seria para evitar el usar _context.Set<CineWithoutLocation>() en los controladores
         public DbSet<CineWithoutLocation> CinesWithoutLocations { get; set; }
+
+
     }
 }

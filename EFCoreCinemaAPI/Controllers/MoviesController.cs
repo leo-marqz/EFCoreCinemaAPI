@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
+using EFCoreCinemaAPI.Models.Keyless;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,6 +23,12 @@ namespace EFCoreCinemaAPI.Controllers
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        [HttpGet("metrics")]
+        public async Task<ActionResult<IEnumerable<Metric>>> GetMetrics()
+        {
+            return await _context.Set<Metric>().ToListAsync();
         }
 
         [HttpPost]
