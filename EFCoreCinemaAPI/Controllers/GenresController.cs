@@ -41,6 +41,27 @@ namespace EFCoreCinemaAPI.Controllers
             }
         }
 
+        [HttpGet("obtener-propiedad-sombra")]
+        public async Task<ActionResult<Genre>> GetShadowProperty(int id)
+        {
+            try
+            {
+                if(id <= 0) return BadRequest("Invalid ID provided.");
+                // Retrieve a specific genre by ID from the database
+                var genre = await _context.Genres.AsTracking().FirstOrDefaultAsync(g => g.Id == id);
+                // If genre is not found, return NotFound
+                if (genre is null) return NotFound($"Genre with ID {id} not found.");
+                // Accessing shadow property "CreatedAt"
+                var createdAt = _context.Entry(genre).Property<DateTime>("CreatedAt").CurrentValue;
+                // Returning the genre along with its shadow property
+                return Ok(new { Genre = genre, CreatedAt = createdAt });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error!");
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Genre>> Get(int id)
         {
