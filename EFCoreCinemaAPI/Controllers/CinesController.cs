@@ -69,11 +69,11 @@ namespace EFCoreCinemaAPI.Controllers
 
             var cine = new Cine
             {
-                Name = "Pelis Plus",
+                Name = "Cine XD",
                 Location = myLocation,
                 CineOffer = new CineOffer
                 {
-                    DiscountPercentage = 10,
+                    DiscountPercentage = 15,
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(30)
                 },
@@ -82,12 +82,14 @@ namespace EFCoreCinemaAPI.Controllers
                     new CineRoom
                     {
                         Price = 30.50m,
-                        CineRoomType = CineRoomType.CRT_CXC
+                        CineRoomType = CineRoomType.CRT_CXC,
+                        Currency = Currency.USD
                     },
                     new CineRoom
                     {
                         Price = 25.00m,
-                        CineRoomType = CineRoomType.CRT_3D
+                        CineRoomType = CineRoomType.CRT_3D,
+                        Currency = Currency.EUR
                     }
                 }
             };
