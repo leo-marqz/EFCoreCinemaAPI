@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
+using EFCoreCinemaAPI.Models.Keyless;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -34,6 +35,13 @@ namespace EFCoreCinemaAPI.Controllers
                                 .ProjectTo<CineDto>(_mapper.ConfigurationProvider)
                                 .ToListAsync();
             return Ok(data);
+        }
+
+        [HttpGet("cines-sin-ubicacion")]
+        public async Task<ActionResult<IEnumerable<CineWithoutLocation>>> GetCinesWithoutLocation()
+        {
+            //return await _context.Set<CineWithoutLocation>().ToListAsync();
+            return await _context.CinesWithoutLocations.ToListAsync();
         }
 
         [HttpGet("cines-mas-cercanos")]
