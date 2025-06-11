@@ -62,6 +62,15 @@ namespace EFCoreCinemaAPI.Controllers
             }
         }
 
+        [HttpGet("ordenando-elementos-con-fecha-creacion")]
+        public async Task<ActionResult<IEnumerable<Genre>>> GetOrderByCreatedAt()
+        {
+            //obteniendo los generos ordenados por la fecha de creación (propiedad sombra)
+            return await _context.Genres
+                .OrderByDescending(gr => EF.Property<DateTime>(gr, "CreatedAt"))
+                .ToListAsync();
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Genre>> Get(int id)
         {
