@@ -11,6 +11,9 @@ namespace EFCoreCinemaAPI.Models.Configurations
             builder.Property(a => a.Name).HasField("_name").HasMaxLength(25).IsRequired();
             builder.Property(a => a.Biography).IsRequired();
             builder.Property(a => a.DateOfBirth).HasColumnType("date");
+
+            //ingorando la propiedad Address para que no se mapee a la base de datos
+            //builder.Ignore(a => a.Address);
         }
     }
 }

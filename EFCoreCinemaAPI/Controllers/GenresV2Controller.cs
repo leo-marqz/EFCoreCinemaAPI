@@ -23,6 +23,14 @@ namespace EFCoreCinemaAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Genre request)
         {
+            // nos aseguramos de que el genero no exista antes de agregarlo
+            var genreExists = await context.Genres.AnyAsync(g => g.Name == request.Name);
+
+            if(genreExists)
+            {
+                return BadRequest($"Genre with name '{request.Name}' already exists.");
+            }
+
             //Estados de un objeto en EF Core:
             // 1. Detached: El objeto no está siendo rastreado por el contexto.
             // 2. Unchanged: El objeto está siendo rastreado y no ha cambiado desde que se cargó.

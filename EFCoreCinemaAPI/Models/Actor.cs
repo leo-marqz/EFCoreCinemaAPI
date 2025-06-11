@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace EFCoreCinemaAPI.Models
@@ -28,6 +29,34 @@ namespace EFCoreCinemaAPI.Models
         // Se agrega virtual para permitir la carga diferida (lazy loading) o carga perezosa
         // Se instalo el paquete Microsoft.EntityFrameworkCore.Proxies para habilitar esta funcionalidad
         // Esto permite que las propiedades de navegación se carguen automáticamente cuando se accede a ellas por primera vez
-        public virtual HashSet<MovieActor> MoviesActors { get; set; }
+        public virtual List<MovieActor> MoviesActors { get; set; }
+
+        //propiedad que no sera mapeada a la base de datos
+        [NotMapped]
+        public int? Age
+        {
+            get
+            {
+                if (!DateOfBirth.HasValue)
+                {
+                    return null;
+                }
+
+                var dateOfBirth = DateOfBirth.Value;
+                var age = DateTime.Now.Year - dateOfBirth.Year;
+
+                if (
+                    new DateTime(DateTime.Today.Year, dateOfBirth.Month, dateOfBirth.Day) 
+                    > DateTime.Today)
+                {
+                    age--;
+                }
+
+                return age;
+            }
+
+        }
+
+        public Address Address { get; set; }
     }
 }

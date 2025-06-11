@@ -30,6 +30,8 @@ namespace EFCoreCinemaAPI
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             //modelBuilder.Entity<Log>().Property(lg => lg.Id).ValueGeneratedNever();
+
+            modelBuilder.Ignore<Address>(); // Ignoring Address 
         }
 
         public DbSet<Genre> Genres { get; set; }
