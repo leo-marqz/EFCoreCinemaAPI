@@ -21,9 +21,9 @@ namespace EFCoreCinemaAPI.Models.Configurations
             //relacion mucho a muchos entre generos y peliculas
             //esto se configuro usando las convenciones de EF Core
             //no se creo tabla intermedia explicita
-            builder.HasMany(mv => mv.Genres)
-                    .WithMany(gr => gr.Movies)
-                    .UsingEntity(config=>config.ToTable("GenresMovies") );
+            //builder.HasMany(mv => mv.Genres)
+            //        .WithMany(gr => gr.Movies)
+            //        .UsingEntity(config=>config.ToTable("GenresMovies") );
             //dentro de UsingEntity podemos configurar muchas cosas,
             //como el nombre de la tabla, las columnas, etc.
             //y carga de algunos datos

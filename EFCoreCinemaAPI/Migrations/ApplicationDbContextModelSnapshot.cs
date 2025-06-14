@@ -35,7 +35,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("CineRoomMovie");
+                    b.ToTable("CineRoomMovie", (string)null);
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Actor", b =>
@@ -65,7 +65,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actors");
+                    b.ToTable("Actors", (string)null);
 
                     b.HasData(
                         new
@@ -116,7 +116,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cines");
+                    b.ToTable("Cines", (string)null);
 
                     b.HasData(
                         new
@@ -154,7 +154,7 @@ namespace EFCoreCinemaAPI.Migrations
                         .IsUnique()
                         .HasFilter("[CineId] IS NOT NULL");
 
-                    b.ToTable("CineOffers");
+                    b.ToTable("CineOffers", (string)null);
 
                     b.HasData(
                         new
@@ -195,7 +195,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("CineId");
 
-                    b.ToTable("CineRooms");
+                    b.ToTable("CineRooms", (string)null);
 
                     b.HasData(
                         new
@@ -251,7 +251,7 @@ namespace EFCoreCinemaAPI.Migrations
                         .IsUnique()
                         .HasFilter("IsDeleted = 'false'");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
 
                     b.HasData(
                         new
@@ -339,7 +339,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Message", b =>
@@ -365,7 +365,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("ReceiverId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
 
                     b.HasData(
                         new
@@ -425,7 +425,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movies", (string)null);
 
                     b.HasData(
                         new
@@ -473,7 +473,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("ActorId");
 
-                    b.ToTable("MoviesActors");
+                    b.ToTable("MoviesActors", (string)null);
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.User", b =>
@@ -489,7 +489,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
@@ -516,7 +516,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("GenreMovie");
+                    b.ToTable("GenreMovie", (string)null);
                 });
 
             modelBuilder.Entity("CineRoomMovie", b =>
