@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFCoreCinemaAPI.Models
 {
@@ -10,6 +11,7 @@ namespace EFCoreCinemaAPI.Models
 
         public Currency Currency { get; set; } = Currency.USD;
 
+        [ForeignKey(nameof(CineId))] //llave foreana a Cine
         public int CineId { get; set; }
         public Cine Cine { get; set; }
 

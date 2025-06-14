@@ -77,7 +77,7 @@ namespace EFCoreCinemaAPI.Controllers
 
             var cine = new Cine
             {
-                Name = "Cine XD",
+                Name = "Cine con relacion opcional a Oferta",
                 Location = myLocation,
                 CineOffer = new CineOffer
                 {
@@ -155,6 +155,24 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(_mapper.Map<CineDto>(cinedb));
         }
 
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteById(int id)
+        {
+            var cine = await _context.Cines
+                //el include nos permite traer y modificar la oferta dejando en nullo
+                //la relacion opcional CineOffer, si no se usa el include no se puede modificar la oferta
+                //esto va en conjunto con uso de la propiedad nullable CineId en CineOffer
+                .Include(c => c.CineOffer)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (cine is null)
+            {
+                return NotFound($"Cine with ID {id} not found.");
+            }
+            _context.Remove(cine);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
 
     }
 }

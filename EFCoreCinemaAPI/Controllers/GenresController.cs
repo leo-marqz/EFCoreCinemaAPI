@@ -156,5 +156,7 @@ namespace EFCoreCinemaAPI.Controllers
                                     .ToListAsync();
             return Ok(genres);
         }
+
+        
     }
 }

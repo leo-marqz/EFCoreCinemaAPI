@@ -26,6 +26,7 @@ namespace EFCoreCinemaAPI
 
             //Seeding initial data (Create Migration)
             SeedingQueryModule.Seed(modelBuilder);
+            SeedingUsersMessages.Seed(modelBuilder);
 
             //modelBuilder.ApplyConfiguration(new GenreConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -71,6 +72,8 @@ namespace EFCoreCinemaAPI
         //Esto seria para evitar el usar _context.Set<CineWithoutLocation>() en los controladores
         public DbSet<CineWithoutLocation> CinesWithoutLocations { get; set; }
 
+        public DbSet<User> Users { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
     }
 }

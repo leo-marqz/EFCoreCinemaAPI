@@ -4,6 +4,7 @@ using EFCoreCinemaAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250614183849_CineIdNullable")]
+    partial class CineIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,62 +345,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.ToTable("Logs");
                 });
 
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmitterId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmitterId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.ToTable("Messages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "Hello Alice!",
-                            EmitterId = 1,
-                            ReceiverId = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Content = "Hello Charlie!",
-                            EmitterId = 2,
-                            ReceiverId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Content = "How are you?",
-                            EmitterId = 1,
-                            ReceiverId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Content = "I'm fine, thanks!",
-                            EmitterId = 2,
-                            ReceiverId = 1
-                        });
-                });
-
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -476,34 +423,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.ToTable("MoviesActors");
                 });
 
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Charlie"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Alice"
-                        });
-                });
-
             modelBuilder.Entity("GenreMovie", b =>
                 {
                     b.Property<int>("GenresId")
@@ -552,25 +471,6 @@ namespace EFCoreCinemaAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Cine");
-                });
-
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.Message", b =>
-                {
-                    b.HasOne("EFCoreCinemaAPI.Models.User", "Emitter")
-                        .WithMany("SentMessages")
-                        .HasForeignKey("EmitterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCoreCinemaAPI.Models.User", "Receiver")
-                        .WithMany("ReceivedMessages")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Emitter");
-
-                    b.Navigation("Receiver");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.MovieActor", b =>
@@ -622,13 +522,6 @@ namespace EFCoreCinemaAPI.Migrations
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Movie", b =>
                 {
                     b.Navigation("MoviesActors");
-                });
-
-            modelBuilder.Entity("EFCoreCinemaAPI.Models.User", b =>
-                {
-                    b.Navigation("ReceivedMessages");
-
-                    b.Navigation("SentMessages");
                 });
 #pragma warning restore 612, 618
         }
