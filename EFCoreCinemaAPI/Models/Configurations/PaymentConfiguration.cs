@@ -10,7 +10,7 @@ namespace EFCoreCinemaAPI.Models.Configurations
         {
             //Evalua en base a un campo que tipo de pago se usara
             builder.HasDiscriminator(pm=>pm.Type)
-                .HasValue<Payment>(PaymentType.Cash)
+                .HasValue<Payment>(PaymentType.Cash) // esto es si la clase payment no es abstracta
                 .HasValue<PaypalPay>(PaymentType.PayPal)
                 .HasValue<CardPay>(PaymentType.Card);
 

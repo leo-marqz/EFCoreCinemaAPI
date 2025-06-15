@@ -57,6 +57,36 @@ namespace EFCoreCinemaAPI
                 }
             }
 
+            //Tabla por Tipo
+            modelBuilder.Entity<Merchandising>().ToTable("Merchandising");
+            modelBuilder.Entity<Laptop>().ToTable("Laptops");
+
+            var laptopHp = new Laptop
+            {
+                Id = 1,
+                Brand = "HP",
+                Model = "Pavilion 15",
+                Price = 799.99m,
+                Processor = "Intel Core i7",
+                RAM = 16,
+                Storage = 512
+            };
+
+            var merchandisingItem = new Merchandising
+            {
+                Id = 2,
+                Name = "Cine T-Shirt",
+                Price = 19.99m,
+                IsAvailable = true,
+                IsClothes = false,
+                IsCollectible = true,
+                Volume = 0.5, // Assuming volume is in liters
+                Weight = 0.2 // Assuming weight is in kilograms
+            };
+
+            modelBuilder.Entity<Laptop>().HasData(laptopHp);
+            modelBuilder.Entity<Merchandising>().HasData(merchandisingItem);
+
         }
 
         public DbSet<Genre> Genres { get; set; }
@@ -78,6 +108,8 @@ namespace EFCoreCinemaAPI
         public DbSet<CineProfile> CineProfiles { get; set; }
 
         public DbSet<Payment> Payments { get; set; }
+
+        public DbSet<Product> Products { get; set; }
 
     }
 }
