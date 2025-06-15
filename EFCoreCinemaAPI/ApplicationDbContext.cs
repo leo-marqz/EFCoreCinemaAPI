@@ -9,9 +9,31 @@ namespace EFCoreCinemaAPI
 {
     public class ApplicationDbContext : DbContext
     {
+        //public ApplicationDbContext()
+        //{
+        //    // Constructor vacio necesario para usar OnConfiguring
+        //    // si no se configura en el Program.cs o Startup.cs
+        //}
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //{
+        //    //Esto lo usamos si no queremos configurarlo en el Program.cs o Startup.cs
+        //    //Para ello tambien debemos agregar un constructor vacio
+        //    //luego, llamar el dbcontext en el Program.cs o Startup.cs
+        //    // builder.Services.AddDbContext<ApplicationDbContext>();
+        //    base.OnConfiguring(options);
+        //    if (!options.IsConfigured)
+        //    {
+        //        options.UseSqlServer("name=DefaultConnection", opt =>
+        //        {
+        //            opt.UseNetTopologySuite(); // Enable NetTopologySuite for spatial data types
+        //        }).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); // Set default tracking behavior to NoTracking
+        //    }
+        //}
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
