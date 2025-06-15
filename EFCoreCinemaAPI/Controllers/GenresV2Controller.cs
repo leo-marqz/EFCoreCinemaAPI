@@ -164,5 +164,13 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(new { Message = "Genre restored successfully." });
         }
 
+        [HttpPut]
+        public async Task<ActionResult> Put(Genre genre)
+        {
+            context.Update(genre); // Marca el objeto como modificado
+            await context.SaveChangesAsync(); // Guarda los cambios en la base de datos
+            return Ok();
+        }
+
     }
 }

@@ -1,22 +1,59 @@
 ﻿using EFCoreCinemaAPI.Models;
 using EFCoreCinemaAPI.Models.Keyless;
 using EFCoreCinemaAPI.Models.Seeding;
+using EFCoreCinemaAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EFCoreCinemaAPI
 {
     public class ApplicationDbContext : DbContext
     {
+        private readonly IUserService userService;
+
         //public ApplicationDbContext()
         //{
         //    // Constructor vacio necesario para usar OnConfiguring
         //    // si no se configura en el Program.cs o Startup.cs
         //}
 
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions options, IUserService userService) 
+            : base(options)
         {
+            this.userService = userService;
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            // Procesar las entidades antes de guardar - se modifico en SaveChangesAsync
+            ProcessSaving();
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ProcessSaving()
+        {
+            foreach(var item in ChangeTracker.Entries().Where(e=>e.State == EntityState.Added 
+            && e.Entity is AuditableEntity))
+            {
+                var entity = item.Entity as AuditableEntity;
+                entity.CreatedBy = userService.GetUserById(); // Aquí podrías obtener el usuario actual si tienes un contexto de usuario
+                entity.ModifiedBy = userService.GetUserById();
+            }
+
+            foreach (var item in ChangeTracker.Entries().Where(e => e.State == EntityState.Modified
+            && e.Entity is AuditableEntity))
+            {
+                var entity = item.Entity as AuditableEntity;
+                entity.ModifiedBy = userService.GetUserById();
+
+                // No modificar CreatedBy al actualizar
+                item.Property(nameof(entity.CreatedBy)).IsModified = false; 
+            }
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder options)
