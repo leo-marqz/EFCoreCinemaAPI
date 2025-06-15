@@ -21,9 +21,23 @@ namespace EFCoreCinemaAPI.Models.Configurations
             //si se usan las convenciones de EF Core,
             //no es necesario hacer esto, pero es una buena practica
             //prodiedad de navegacion, propiedad de llave primaria y clave foranea
-            builder.HasMany(c=>c.CineRooms) //un cine tiene muchas salas
+            builder.HasMany(c => c.CineRooms) //un cine tiene muchas salas
                 .WithOne(cr => cr.Cine) //una sala pertenece a un cine
                 .HasForeignKey(cr => cr.CineId); //la clave foranea de CineRoom es CineId
+                                                 //.OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(cn => cn.CineProfile)
+                    .WithOne(cp => cp.Cine)
+                    .HasForeignKey<CineProfile>(cp => cp.Id);
+
+            //configuracion de la propiedad entidad (Address)
+            builder.OwnsOne((cn) => cn.Address, adr =>
+            {
+                adr.Property((ad) => ad.Street).HasColumnName("Street");
+                adr.Property((ad) => ad.State).HasColumnName("State");
+                adr.Property((ad) => ad.Country).HasColumnName("Country");
+            });
+
         }
     }
 }

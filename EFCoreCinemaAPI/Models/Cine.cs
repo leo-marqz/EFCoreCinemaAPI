@@ -13,5 +13,10 @@ namespace EFCoreCinemaAPI.Models
         //Navigation property
         public CineOffer CineOffer { get; set; }
         public List<CineRoom> CineRooms { get; set; }
+
+        //campos de cine pero representados por otra entidad
+        public CineProfile CineProfile { get; set; }
+
+        public Address Address { get; set; }
     }
 }

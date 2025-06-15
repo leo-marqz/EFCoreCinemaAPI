@@ -33,7 +33,7 @@ namespace EFCoreCinemaAPI
 
             //modelBuilder.Entity<Log>().Property(lg => lg.Id).ValueGeneratedNever();
 
-            modelBuilder.Ignore<Address>(); // Ignoring Address 
+            //modelBuilder.Ignore<Address>(); // Ignoring Address 
 
             modelBuilder.Entity<CineWithoutLocation>()
                 .ToSqlQuery("SELECT Id, Name FROM Cines") // Using a raw SQL query to define the entity
@@ -74,6 +74,10 @@ namespace EFCoreCinemaAPI
 
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<CineProfile> CineProfiles { get; set; }
+
+        public DbSet<Payment> Payments { get; set; }
 
     }
 }

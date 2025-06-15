@@ -14,6 +14,14 @@ namespace EFCoreCinemaAPI.Models.Configurations
 
             //ingorando la propiedad Address para que no se mapee a la base de datos
             //builder.Ignore(a => a.Address);
+
+            //configurando Entidad de Propiedad (Owned Entity)
+            builder.OwnsOne(a => a.HomeAddress, adr =>
+            {
+                adr.Property(ad => ad.Street).HasColumnName("Street");
+                adr.Property(ad => ad.State).HasColumnName("State");
+                adr.Property(ad => ad.Country).HasColumnName("Country");
+            });
         }
     }
 }

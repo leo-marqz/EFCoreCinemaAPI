@@ -77,7 +77,13 @@ namespace EFCoreCinemaAPI.Controllers
 
             var cine = new Cine
             {
-                Name = "Cine con relacion opcional a Oferta",
+                Name = "Cine con detalle #2",
+                CineProfile = new CineProfile
+                {
+                    History = "Cine con historia",
+                    Mision = "Nuestra misión es ofrecer la mejor experiencia cinematográfica.",
+                    CodeOfEthics = "Código de ética del cine.",
+                },
                 Location = myLocation,
                 CineOffer = new CineOffer
                 {

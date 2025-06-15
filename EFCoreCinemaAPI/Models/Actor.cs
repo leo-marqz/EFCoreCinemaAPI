@@ -58,8 +58,10 @@ namespace EFCoreCinemaAPI.Models
         }
 
         //propiedad marcada como no mapeada a la base de datos
-        public Address Address { get; set; }
 
         public string AvatarUrl { get; set; }
+
+        public Address HomeAddress { get; set; }
+        public Address BillingAddress { get; set; }
     }
 }
