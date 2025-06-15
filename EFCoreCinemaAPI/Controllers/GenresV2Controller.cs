@@ -20,6 +20,24 @@ namespace EFCoreCinemaAPI.Controllers
             this.mapper = mapper;
         }
 
+        [HttpPost("add-genre")]
+        public async Task<ActionResult<Genre>> newPost(Genre genre)
+        {
+            var genreExists = await context.Genres.AnyAsync(g => g.Name == genre.Name);
+
+            if(genreExists)
+            {
+                return BadRequest($"Genre with name '{genre.Name}' already exists.");
+            }
+
+            //otra manera de manejar el estado del objeto
+            context.Entry(genre).State = EntityState.Added; // Marca el estado del objeto como agregado
+
+            await context.SaveChangesAsync();
+
+            return Ok(genre);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(Genre request)
         {

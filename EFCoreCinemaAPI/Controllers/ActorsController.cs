@@ -87,6 +87,10 @@ namespace EFCoreCinemaAPI.Controllers
             //marcar como modificado
             //_context.Entry(actor).State = EntityState.Modified;
             _context.Update(actor); //esto marca el objeto como modificado
+
+            //otra forma de actualizar es por actualizacion por propiedades
+            //_context.Entry(actor).Property(a => a.Name).IsModified = true;
+
             await _context.SaveChangesAsync();
             return Ok(actor);
         }
