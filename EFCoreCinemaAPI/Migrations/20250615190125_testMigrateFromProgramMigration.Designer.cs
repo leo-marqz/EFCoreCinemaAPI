@@ -4,6 +4,7 @@ using EFCoreCinemaAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250615190125_testMigrateFromProgramMigration")]
+    partial class testMigrateFromProgramMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,9 +368,6 @@ namespace EFCoreCinemaAPI.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("LogLevel")
-                        .HasColumnType("int");
-
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
@@ -541,14 +541,14 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 1,
                             Amount = 9.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 13, 4, 40, 839, DateTimeKind.Local).AddTicks(2260),
+                            TransactionDate = new DateTime(2025, 6, 14, 13, 1, 24, 441, DateTimeKind.Local).AddTicks(6531),
                             Type = 0
                         },
                         new
                         {
                             Id = 2,
                             Amount = 19.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 3, 4, 40, 839, DateTimeKind.Local).AddTicks(2273),
+                            TransactionDate = new DateTime(2025, 6, 15, 3, 1, 24, 441, DateTimeKind.Local).AddTicks(6545),
                             Type = 0
                         });
                 });
@@ -633,7 +633,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 5,
                             Amount = 79.99m,
-                            TransactionDate = new DateTime(2025, 6, 13, 13, 4, 40, 834, DateTimeKind.Local).AddTicks(2527),
+                            TransactionDate = new DateTime(2025, 6, 13, 13, 1, 24, 437, DateTimeKind.Local).AddTicks(473),
                             Type = 1,
                             Digits = "1234"
                         },
@@ -641,7 +641,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 6,
                             Amount = 29.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 10, 4, 40, 834, DateTimeKind.Local).AddTicks(2545),
+                            TransactionDate = new DateTime(2025, 6, 15, 10, 1, 24, 437, DateTimeKind.Local).AddTicks(488),
                             Type = 1,
                             Digits = "5678"
                         });
@@ -663,7 +663,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 3,
                             Amount = 99.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 13, 4, 40, 839, DateTimeKind.Local).AddTicks(4463),
+                            TransactionDate = new DateTime(2025, 6, 14, 13, 1, 24, 441, DateTimeKind.Local).AddTicks(8621),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         },
@@ -671,7 +671,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 4,
                             Amount = 49.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 8, 4, 40, 839, DateTimeKind.Local).AddTicks(4470),
+                            TransactionDate = new DateTime(2025, 6, 15, 8, 1, 24, 441, DateTimeKind.Local).AddTicks(8626),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         });
