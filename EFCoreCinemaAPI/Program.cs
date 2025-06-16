@@ -42,6 +42,7 @@ namespace EFCoreCinemaAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IDbContextEvents, DbContextEvents>();
 
             var app = builder.Build();
 

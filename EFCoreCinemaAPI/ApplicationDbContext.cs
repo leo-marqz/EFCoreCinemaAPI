@@ -21,10 +21,22 @@ namespace EFCoreCinemaAPI
         //    // si no se configura en el Program.cs o Startup.cs
         //}
 
-        public ApplicationDbContext(DbContextOptions options, IUserService userService) 
+        public ApplicationDbContext(
+            DbContextOptions options, 
+            IUserService userService,
+            IDbContextEvents dbContextEvents) 
             : base(options)
         {
             this.userService = userService;
+
+            if(dbContextEvents is not null)
+            {
+                ChangeTracker.Tracked += dbContextEvents.HandleTracked;
+                ChangeTracker.StateChanged += dbContextEvents.HandleStateChanged;
+                SavingChanges += dbContextEvents.HandleSavingChanges;
+                SavedChanges += dbContextEvents.HandleSavedChanges;
+                SaveChangesFailed += dbContextEvents.HandleSaveChangesFailed;
+            }
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
