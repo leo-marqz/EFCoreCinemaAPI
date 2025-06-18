@@ -191,5 +191,28 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(genre);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Genre>> Post(Genre genre)
+        {
+            if(genre is null)
+            {
+                return BadRequest("Genre cannot be null.");
+            }
+
+            var existingGenre = await _context.Genres
+                                            .FirstOrDefaultAsync(g => g.Name == genre.Name);
+
+            if (existingGenre != null)
+            {
+                return BadRequest($"Genre with name '{genre.Name}' already exists.");
+            }
+
+            await _context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Genres (Name) VALUES ({genre.Name})");
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
     }
 }
