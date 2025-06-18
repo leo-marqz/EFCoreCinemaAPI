@@ -37,6 +37,28 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet("queries/sql/string/interpolation/{id:int}")]
+        public async Task<ActionResult<Cine>> GetById(int id)
+        {
+            var cine = await _context.Cines
+                                .FromSqlInterpolated($"SELECT * FROM Cines WHERE Id = {id}")
+                                .Include(c => c.CineOffer)
+                                .Include(c => c.CineRooms)
+                                .Include(c => c.CineProfile)
+                                .FirstOrDefaultAsync();
+
+            if (cine is null)
+            {
+                return NotFound($"Cine with ID {id} not found.");
+            }
+
+            // Exclude the location from the response if not needed
+            cine.Location = null; // Set to null if you don't want to return the location
+
+            return Ok(cine);
+
+        }
+
         [HttpGet("cines-sin-ubicacion")]
         public async Task<ActionResult<IEnumerable<CineWithoutLocation>>> GetCinesWithoutLocation()
         {

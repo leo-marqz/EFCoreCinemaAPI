@@ -157,6 +157,39 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(genres);
         }
 
-        
+        [HttpGet("queriable/sql/{id:int}")]
+        public async Task<ActionResult<Genre>> GetGenreUsingQueries(int id)
+        {
+            //Es obligatorio usar Select * From Genres, de lo contrario no funciona
+            var genre = await _context.Genres
+                                .FromSqlRaw("SELECT * FROM Genres WHERE Id = {0}", id)
+                                .IgnoreQueryFilters() // Ignoring global query filters
+                                .FirstOrDefaultAsync();
+            if(genre is null)
+            {
+                return NotFound($"Genre with ID {id} not found.");
+            }
+
+            var createdAt = _context.Entry(genre).Property<DateTime>("CreatedAt").CurrentValue;
+
+            return Ok(new { Genre = genre, CreatedAt = createdAt });
+        }
+
+        [HttpGet("queriable/sql/string/interpolation{id:int}")]
+        public async Task<ActionResult<Genre>> GetGenreUsingStringInterpolation(int id)
+        {
+            //Es obligatorio usar Select * From Genres, de lo contrario no funciona
+            var genre = await _context.Genres
+                                .FromSqlInterpolated($"SELECT * FROM Genres WHERE Id = {id}")
+                                .IgnoreQueryFilters() // Ignoring global query filters
+                                .FirstOrDefaultAsync();
+            if(genre is null)
+            {
+                return NotFound($"Genre with ID {id} not found.");
+            }
+
+            return Ok(genre);
+        }
+
     }
 }
