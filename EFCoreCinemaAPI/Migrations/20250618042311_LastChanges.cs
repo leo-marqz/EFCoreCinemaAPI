@@ -8,11 +8,42 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EFCoreCinemaAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InheritanceByType : Migration
+    public partial class LastChanges : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "CreatedBy",
+                table: "Genres",
+                type: "nvarchar(150)",
+                maxLength: 150,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "ModifiedBy",
+                table: "Genres",
+                type: "nvarchar(150)",
+                maxLength: 150,
+                nullable: true);
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "date", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Digits = table.Column<string>(type: "char(4)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
@@ -74,46 +105,80 @@ namespace EFCoreCinemaAPI.Migrations
                 });
 
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "CineOffers",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 13, 22, 26, 8, 408, DateTimeKind.Local).AddTicks(6435));
+                columns: new[] { "EndDate", "StartDate" },
+                values: new object[] { new DateTime(2025, 7, 17, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 6, 17, 0, 0, 0, 0, DateTimeKind.Local) });
 
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "Genres",
+                keyColumn: "Id",
+                keyValue: 1,
+                columns: new[] { "CreatedBy", "ModifiedBy" },
+                values: new object[] { null, null });
+
+            migrationBuilder.UpdateData(
+                table: "Genres",
                 keyColumn: "Id",
                 keyValue: 2,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 14, 12, 26, 8, 408, DateTimeKind.Local).AddTicks(6462));
+                columns: new[] { "CreatedBy", "ModifiedBy" },
+                values: new object[] { null, null });
 
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "Genres",
                 keyColumn: "Id",
                 keyValue: 3,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 13, 22, 26, 8, 409, DateTimeKind.Local).AddTicks(526));
+                columns: new[] { "CreatedBy", "ModifiedBy" },
+                values: new object[] { null, null });
 
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "Genres",
                 keyColumn: "Id",
                 keyValue: 4,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 14, 17, 26, 8, 409, DateTimeKind.Local).AddTicks(537));
+                columns: new[] { "CreatedBy", "ModifiedBy" },
+                values: new object[] { null, null });
 
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "Genres",
                 keyColumn: "Id",
                 keyValue: 5,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 12, 22, 26, 8, 399, DateTimeKind.Local).AddTicks(4430));
+                columns: new[] { "CreatedBy", "ModifiedBy" },
+                values: new object[] { null, null });
 
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "Genres",
                 keyColumn: "Id",
                 keyValue: 6,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 14, 19, 26, 8, 399, DateTimeKind.Local).AddTicks(4448));
+                columns: new[] { "CreatedBy", "ModifiedBy" },
+                values: new object[] { null, null });
+
+            migrationBuilder.InsertData(
+                table: "Payments",
+                columns: new[] { "Id", "Amount", "TransactionDate", "Type" },
+                values: new object[,]
+                {
+                    { 1, 9.99m, new DateTime(2025, 6, 16, 22, 23, 11, 265, DateTimeKind.Local).AddTicks(7898), 0 },
+                    { 2, 19.99m, new DateTime(2025, 6, 17, 12, 23, 11, 265, DateTimeKind.Local).AddTicks(7915), 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Payments",
+                columns: new[] { "Id", "Amount", "Email", "TransactionDate", "Type" },
+                values: new object[,]
+                {
+                    { 3, 99.99m, "leomarqz@gmail.com", new DateTime(2025, 6, 16, 22, 23, 11, 266, DateTimeKind.Local).AddTicks(863), 2 },
+                    { 4, 49.99m, "leomarqz@gmail.com", new DateTime(2025, 6, 17, 17, 23, 11, 266, DateTimeKind.Local).AddTicks(868), 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Payments",
+                columns: new[] { "Id", "Amount", "Digits", "TransactionDate", "Type" },
+                values: new object[,]
+                {
+                    { 5, 79.99m, "1234", new DateTime(2025, 6, 15, 22, 23, 11, 260, DateTimeKind.Local).AddTicks(3340), 1 },
+                    { 6, 29.99m, "5678", new DateTime(2025, 6, 17, 19, 23, 11, 260, DateTimeKind.Local).AddTicks(3354), 1 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Products",
@@ -145,49 +210,25 @@ namespace EFCoreCinemaAPI.Migrations
                 name: "Merchandising");
 
             migrationBuilder.DropTable(
+                name: "Payments");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
+            migrationBuilder.DropColumn(
+                name: "CreatedBy",
+                table: "Genres");
+
+            migrationBuilder.DropColumn(
+                name: "ModifiedBy",
+                table: "Genres");
+
             migrationBuilder.UpdateData(
-                table: "Payments",
+                table: "CineOffers",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 13, 21, 57, 49, 649, DateTimeKind.Local).AddTicks(4223));
-
-            migrationBuilder.UpdateData(
-                table: "Payments",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 14, 11, 57, 49, 649, DateTimeKind.Local).AddTicks(4249));
-
-            migrationBuilder.UpdateData(
-                table: "Payments",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 13, 21, 57, 49, 649, DateTimeKind.Local).AddTicks(8172));
-
-            migrationBuilder.UpdateData(
-                table: "Payments",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 14, 16, 57, 49, 649, DateTimeKind.Local).AddTicks(8183));
-
-            migrationBuilder.UpdateData(
-                table: "Payments",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 12, 21, 57, 49, 644, DateTimeKind.Local).AddTicks(5403));
-
-            migrationBuilder.UpdateData(
-                table: "Payments",
-                keyColumn: "Id",
-                keyValue: 6,
-                column: "TransactionDate",
-                value: new DateTime(2025, 6, 14, 18, 57, 49, 644, DateTimeKind.Local).AddTicks(5427));
+                columns: new[] { "EndDate", "StartDate" },
+                values: new object[] { new DateTime(2025, 7, 14, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 6, 14, 0, 0, 0, 0, DateTimeKind.Local) });
         }
     }
 }

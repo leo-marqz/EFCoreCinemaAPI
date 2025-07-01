@@ -1,5 +1,6 @@
 ﻿using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -212,6 +213,58 @@ namespace EFCoreCinemaAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost("create-genre-with-stored-procedure")]
+        public async Task<ActionResult> CreateGenreWithStoredProcedure(Genre genre)
+        {
+            if(genre is null)
+            {
+                return BadRequest("Genre cannot be null.");
+            }
+
+            var existingGenre = await _context.Genres
+                                            .FirstOrDefaultAsync(g => g.Name == genre.Name);
+            
+
+            if (existingGenre != null)
+            {
+                return BadRequest($"Genre with name '{genre.Name}' already exists.");
+            }
+            
+            var outputId = new SqlParameter()
+            {
+                ParameterName = "@Id",
+                SqlDbType = System.Data.SqlDbType.Int,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            // Call the stored procedure to create a new genre
+            await _context.Database
+                .ExecuteSqlRawAsync(
+                    "EXEC Genre_InsertNewGenre @Name = {0}, @Id = {1} OUTPUT", 
+                    genre.Name, outputId
+                );
+
+            var id = (int)outputId.Value;
+
+            return Ok(id);
+        }
+
+        [HttpGet("get-genre-using-stored-procedure/{id:int}")]
+        public async Task<ActionResult<Genre>> GetGenreUsingStoredProcedure(int id)
+        {
+            var genres = _context.Genres
+                                .FromSqlInterpolated($"EXEC Genre_GetGenreById @Id = {id}")
+                                .IgnoreQueryFilters() // Ignoring global query filters
+                                .AsAsyncEnumerable();
+
+            await foreach(var genre in genres)
+            {
+                return Ok(genre);
+            }
+
+            return NotFound($"Genre with ID {id} not found.");
         }
 
     }

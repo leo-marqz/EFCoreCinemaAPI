@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250615190125_testMigrateFromProgramMigration")]
-    partial class testMigrateFromProgramMigration
+    [Migration("20250701190149_InvoiceMigration")]
+    partial class InvoiceMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,8 +170,8 @@ namespace EFCoreCinemaAPI.Migrations
                             Id = 1,
                             CineId = 1,
                             DiscountPercentage = 10m,
-                            EndDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Local),
-                            StartDate = new DateTime(2025, 6, 15, 0, 0, 0, 0, DateTimeKind.Local)
+                            EndDate = new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local),
+                            StartDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -271,8 +271,16 @@ namespace EFCoreCinemaAPI.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GetDate()");
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -326,6 +334,47 @@ namespace EFCoreCinemaAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.InvoiceDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<string>("Product")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("InvoiceDetails");
+                });
+
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Keyless.CineWithoutLocation", b =>
                 {
                     b.Property<int>("Id")
@@ -358,9 +407,11 @@ namespace EFCoreCinemaAPI.Migrations
                     b.Property<int>("TotalGenres")
                         .HasColumnType("int");
 
+                    b.HasKey("Id");
+
                     b.ToTable((string)null);
 
-                    b.ToView("Metrics", (string)null);
+                    b.ToSqlQuery("select Id, Title, \r\n                                                        (select count(*) from GenreMovie where MoviesId = Movies.Id) as TotalGenres,\r\n                                                        (select count(distinct CineId) from CineRoomMovie \r\n                                                        inner join CineRooms on CineRooms.Id = CineRoomMovie.CineRoomsId \r\n                                                        where MoviesId = Movies.Id) as TotalCines,\r\n                                                        (select count(*) from MoviesActors where MovieId = Movies.Id) as TotalActors from Movies");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Log", b =>
@@ -541,14 +592,14 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 1,
                             Amount = 9.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 13, 1, 24, 441, DateTimeKind.Local).AddTicks(6531),
+                            TransactionDate = new DateTime(2025, 6, 30, 13, 1, 49, 138, DateTimeKind.Local).AddTicks(6247),
                             Type = 0
                         },
                         new
                         {
                             Id = 2,
                             Amount = 19.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 3, 1, 24, 441, DateTimeKind.Local).AddTicks(6545),
+                            TransactionDate = new DateTime(2025, 7, 1, 3, 1, 49, 138, DateTimeKind.Local).AddTicks(6260),
                             Type = 0
                         });
                 });
@@ -633,7 +684,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 5,
                             Amount = 79.99m,
-                            TransactionDate = new DateTime(2025, 6, 13, 13, 1, 24, 437, DateTimeKind.Local).AddTicks(473),
+                            TransactionDate = new DateTime(2025, 6, 29, 13, 1, 49, 133, DateTimeKind.Local).AddTicks(438),
                             Type = 1,
                             Digits = "1234"
                         },
@@ -641,7 +692,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 6,
                             Amount = 29.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 10, 1, 24, 437, DateTimeKind.Local).AddTicks(488),
+                            TransactionDate = new DateTime(2025, 7, 1, 10, 1, 49, 133, DateTimeKind.Local).AddTicks(454),
                             Type = 1,
                             Digits = "5678"
                         });
@@ -663,7 +714,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 3,
                             Amount = 99.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 13, 1, 24, 441, DateTimeKind.Local).AddTicks(8621),
+                            TransactionDate = new DateTime(2025, 6, 30, 13, 1, 49, 138, DateTimeKind.Local).AddTicks(9677),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         },
@@ -671,7 +722,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 4,
                             Amount = 49.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 8, 1, 24, 441, DateTimeKind.Local).AddTicks(8626),
+                            TransactionDate = new DateTime(2025, 7, 1, 8, 1, 49, 138, DateTimeKind.Local).AddTicks(9687),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         });
@@ -888,6 +939,15 @@ namespace EFCoreCinemaAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Cine");
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.InvoiceDetail", b =>
+                {
+                    b.HasOne("EFCoreCinemaAPI.Models.Invoice", null)
+                        .WithMany()
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Message", b =>

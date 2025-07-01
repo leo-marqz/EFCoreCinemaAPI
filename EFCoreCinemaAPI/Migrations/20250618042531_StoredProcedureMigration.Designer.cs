@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250615035750_PaymentWithDiscriminatorForPaymentTypeMigration")]
-    partial class PaymentWithDiscriminatorForPaymentTypeMigration
+    [Migration("20250618042531_StoredProcedureMigration")]
+    partial class StoredProcedureMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,8 +170,8 @@ namespace EFCoreCinemaAPI.Migrations
                             Id = 1,
                             CineId = 1,
                             DiscountPercentage = 10m,
-                            EndDate = new DateTime(2025, 7, 14, 0, 0, 0, 0, DateTimeKind.Local),
-                            StartDate = new DateTime(2025, 6, 14, 0, 0, 0, 0, DateTimeKind.Local)
+                            EndDate = new DateTime(2025, 7, 17, 0, 0, 0, 0, DateTimeKind.Local),
+                            StartDate = new DateTime(2025, 6, 17, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -271,8 +271,16 @@ namespace EFCoreCinemaAPI.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GetDate()");
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -358,9 +366,11 @@ namespace EFCoreCinemaAPI.Migrations
                     b.Property<int>("TotalGenres")
                         .HasColumnType("int");
 
+                    b.HasKey("Id");
+
                     b.ToTable((string)null);
 
-                    b.ToView("Metrics", (string)null);
+                    b.ToSqlQuery("select Id, Title, \r\n                                                        (select count(*) from GenreMovie where MoviesId = Movies.Id) as TotalGenres,\r\n                                                        (select count(distinct CineId) from CineRoomMovie \r\n                                                        inner join CineRooms on CineRooms.Id = CineRoomMovie.CineRoomsId \r\n                                                        where MoviesId = Movies.Id) as TotalCines,\r\n                                                        (select count(*) from MoviesActors where MovieId = Movies.Id) as TotalActors from Movies");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Log", b =>
@@ -541,16 +551,38 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 1,
                             Amount = 9.99m,
-                            TransactionDate = new DateTime(2025, 6, 13, 21, 57, 49, 649, DateTimeKind.Local).AddTicks(4223),
+                            TransactionDate = new DateTime(2025, 6, 16, 22, 25, 31, 122, DateTimeKind.Local).AddTicks(2348),
                             Type = 0
                         },
                         new
                         {
                             Id = 2,
                             Amount = 19.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 11, 57, 49, 649, DateTimeKind.Local).AddTicks(4249),
+                            TransactionDate = new DateTime(2025, 6, 17, 12, 25, 31, 122, DateTimeKind.Local).AddTicks(2365),
                             Type = 0
                         });
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.User", b =>
@@ -611,7 +643,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 5,
                             Amount = 79.99m,
-                            TransactionDate = new DateTime(2025, 6, 12, 21, 57, 49, 644, DateTimeKind.Local).AddTicks(5403),
+                            TransactionDate = new DateTime(2025, 6, 15, 22, 25, 31, 117, DateTimeKind.Local).AddTicks(4206),
                             Type = 1,
                             Digits = "1234"
                         },
@@ -619,7 +651,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 6,
                             Amount = 29.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 18, 57, 49, 644, DateTimeKind.Local).AddTicks(5427),
+                            TransactionDate = new DateTime(2025, 6, 17, 19, 25, 31, 117, DateTimeKind.Local).AddTicks(4222),
                             Type = 1,
                             Digits = "5678"
                         });
@@ -641,7 +673,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 3,
                             Amount = 99.99m,
-                            TransactionDate = new DateTime(2025, 6, 13, 21, 57, 49, 649, DateTimeKind.Local).AddTicks(8172),
+                            TransactionDate = new DateTime(2025, 6, 16, 22, 25, 31, 122, DateTimeKind.Local).AddTicks(4632),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         },
@@ -649,9 +681,85 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 4,
                             Amount = 49.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 16, 57, 49, 649, DateTimeKind.Local).AddTicks(8183),
+                            TransactionDate = new DateTime(2025, 6, 17, 17, 25, 31, 122, DateTimeKind.Local).AddTicks(4637),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
+                        });
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.Laptop", b =>
+                {
+                    b.HasBaseType("EFCoreCinemaAPI.Models.Product");
+
+                    b.Property<string>("Brand")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GraphicsCard")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Processor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RAM")
+                        .HasColumnType("int");
+
+                    b.Property<double>("ScreenSize")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Storage")
+                        .HasColumnType("int");
+
+                    b.ToTable("Laptops", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Price = 799.99m,
+                            Brand = "HP",
+                            Model = "Pavilion 15",
+                            Processor = "Intel Core i7",
+                            RAM = 16,
+                            ScreenSize = 0.0,
+                            Storage = 512
+                        });
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.Merchandising", b =>
+                {
+                    b.HasBaseType("EFCoreCinemaAPI.Models.Product");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsClothes")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCollectible")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Volume")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("float");
+
+                    b.ToTable("Merchandising", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cine T-Shirt",
+                            Price = 19.99m,
+                            IsAvailable = true,
+                            IsClothes = false,
+                            IsCollectible = true,
+                            Volume = 0.5,
+                            Weight = 0.20000000000000001
                         });
                 });
 
@@ -841,6 +949,24 @@ namespace EFCoreCinemaAPI.Migrations
                     b.HasOne("EFCoreCinemaAPI.Models.Movie", null)
                         .WithMany()
                         .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.Laptop", b =>
+                {
+                    b.HasOne("EFCoreCinemaAPI.Models.Product", null)
+                        .WithOne()
+                        .HasForeignKey("EFCoreCinemaAPI.Models.Laptop", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EFCoreCinemaAPI.Models.Merchandising", b =>
+                {
+                    b.HasOne("EFCoreCinemaAPI.Models.Product", null)
+                        .WithOne()
+                        .HasForeignKey("EFCoreCinemaAPI.Models.Merchandising", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

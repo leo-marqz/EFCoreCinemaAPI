@@ -7,7 +7,7 @@ namespace EFCoreCinemaAPI.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
-        public LogLevel LogLevel { get; set; }
+        //public LogLevel LogLevel { get; set; }
         public string Message { get; set; }
     }
 }

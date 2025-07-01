@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250615190441_test2MigrateFromProgramMigrations")]
-    partial class test2MigrateFromProgramMigrations
+    [Migration("20250618042311_LastChanges")]
+    partial class LastChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,8 +170,8 @@ namespace EFCoreCinemaAPI.Migrations
                             Id = 1,
                             CineId = 1,
                             DiscountPercentage = 10m,
-                            EndDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Local),
-                            StartDate = new DateTime(2025, 6, 15, 0, 0, 0, 0, DateTimeKind.Local)
+                            EndDate = new DateTime(2025, 7, 17, 0, 0, 0, 0, DateTimeKind.Local),
+                            StartDate = new DateTime(2025, 6, 17, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -271,8 +271,16 @@ namespace EFCoreCinemaAPI.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GetDate()");
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -358,18 +366,17 @@ namespace EFCoreCinemaAPI.Migrations
                     b.Property<int>("TotalGenres")
                         .HasColumnType("int");
 
+                    b.HasKey("Id");
+
                     b.ToTable((string)null);
 
-                    b.ToView("Metrics", (string)null);
+                    b.ToSqlQuery("select Id, Title, \r\n                                                        (select count(*) from GenreMovie where MoviesId = Movies.Id) as TotalGenres,\r\n                                                        (select count(distinct CineId) from CineRoomMovie \r\n                                                        inner join CineRooms on CineRooms.Id = CineRoomMovie.CineRoomsId \r\n                                                        where MoviesId = Movies.Id) as TotalCines,\r\n                                                        (select count(*) from MoviesActors where MovieId = Movies.Id) as TotalActors from Movies");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Log", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("LogLevel")
-                        .HasColumnType("int");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
@@ -544,14 +551,14 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 1,
                             Amount = 9.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 13, 4, 40, 839, DateTimeKind.Local).AddTicks(2260),
+                            TransactionDate = new DateTime(2025, 6, 16, 22, 23, 11, 265, DateTimeKind.Local).AddTicks(7898),
                             Type = 0
                         },
                         new
                         {
                             Id = 2,
                             Amount = 19.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 3, 4, 40, 839, DateTimeKind.Local).AddTicks(2273),
+                            TransactionDate = new DateTime(2025, 6, 17, 12, 23, 11, 265, DateTimeKind.Local).AddTicks(7915),
                             Type = 0
                         });
                 });
@@ -636,7 +643,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 5,
                             Amount = 79.99m,
-                            TransactionDate = new DateTime(2025, 6, 13, 13, 4, 40, 834, DateTimeKind.Local).AddTicks(2527),
+                            TransactionDate = new DateTime(2025, 6, 15, 22, 23, 11, 260, DateTimeKind.Local).AddTicks(3340),
                             Type = 1,
                             Digits = "1234"
                         },
@@ -644,7 +651,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 6,
                             Amount = 29.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 10, 4, 40, 834, DateTimeKind.Local).AddTicks(2545),
+                            TransactionDate = new DateTime(2025, 6, 17, 19, 23, 11, 260, DateTimeKind.Local).AddTicks(3354),
                             Type = 1,
                             Digits = "5678"
                         });
@@ -666,7 +673,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 3,
                             Amount = 99.99m,
-                            TransactionDate = new DateTime(2025, 6, 14, 13, 4, 40, 839, DateTimeKind.Local).AddTicks(4463),
+                            TransactionDate = new DateTime(2025, 6, 16, 22, 23, 11, 266, DateTimeKind.Local).AddTicks(863),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         },
@@ -674,7 +681,7 @@ namespace EFCoreCinemaAPI.Migrations
                         {
                             Id = 4,
                             Amount = 49.99m,
-                            TransactionDate = new DateTime(2025, 6, 15, 8, 4, 40, 839, DateTimeKind.Local).AddTicks(4470),
+                            TransactionDate = new DateTime(2025, 6, 17, 17, 23, 11, 266, DateTimeKind.Local).AddTicks(868),
                             Type = 2,
                             Email = "leomarqz@gmail.com"
                         });
