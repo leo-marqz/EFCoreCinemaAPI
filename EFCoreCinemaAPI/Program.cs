@@ -36,6 +36,8 @@ namespace EFCoreCinemaAPI
                         System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
                 });
 
+            builder.Services.AddScoped<IUpdateObservableCollectionService, UpdateObservableCollectionService>();
+
             builder.Services.AddRouting(options=> options.LowercaseUrls = true);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

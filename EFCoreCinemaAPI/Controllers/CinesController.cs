@@ -3,12 +3,14 @@ using AutoMapper.QueryableExtensions;
 using EFCoreCinemaAPI.DTOs;
 using EFCoreCinemaAPI.Models;
 using EFCoreCinemaAPI.Models.Keyless;
+using EFCoreCinemaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,11 +22,14 @@ namespace EFCoreCinemaAPI.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IMapper _mapper;
+        private readonly IUpdateObservableCollectionService _updateObservableCollectionService;
 
-        public CinesController(ApplicationDbContext context, IMapper mapper)
+        public CinesController(ApplicationDbContext context, IMapper mapper,
+            IUpdateObservableCollectionService updateObservableCollectionService)
         {
             _context = context;
             _mapper = mapper;
+            _updateObservableCollectionService = updateObservableCollectionService;
         }
 
         [HttpGet]
@@ -113,7 +118,7 @@ namespace EFCoreCinemaAPI.Controllers
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(30)
                 },
-                CineRooms = new List<CineRoom>
+                CineRooms = new ObservableCollection<CineRoom>
                 {
                     new CineRoom
                     {
@@ -177,6 +182,9 @@ namespace EFCoreCinemaAPI.Controllers
 
             // Update the cinema's properties
             cinedb = _mapper.Map(createCineDto, cinedb);
+
+            _updateObservableCollectionService
+                .Update(cinedb.CineRooms, createCineDto.CineRooms);
 
             await _context.SaveChangesAsync();
 

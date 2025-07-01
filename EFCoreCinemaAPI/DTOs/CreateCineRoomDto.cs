@@ -2,7 +2,7 @@
 
 namespace EFCoreCinemaAPI.DTOs
 {
-    public class CreateCineRoomDto
+    public class CreateCineRoomDto : IId
     {
         public int Id { get; set; }
         public decimal Price { get; set; }

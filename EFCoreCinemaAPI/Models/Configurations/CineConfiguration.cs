@@ -7,6 +7,10 @@ namespace EFCoreCinemaAPI.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Cine> builder)
         {
+            //Implementando seguimiento de cambios en valores de una propiedad en la entidad cine
+            //personalizado.
+            builder.HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangedNotifications);
+
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Name)
                 .HasMaxLength(150)
