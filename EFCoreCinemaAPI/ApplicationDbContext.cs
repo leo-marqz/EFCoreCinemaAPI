@@ -174,6 +174,10 @@ namespace EFCoreCinemaAPI
             modelBuilder.Entity<Laptop>().HasData(laptopHp);
             modelBuilder.Entity<Merchandising>().HasData(merchandisingItem);
 
+            modelBuilder.HasSequence<int>("InvoiceNumber", "Invoice")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
         }
 
         [DbFunction(Name = "GetInvoiceTotal")]
