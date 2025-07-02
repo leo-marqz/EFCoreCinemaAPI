@@ -179,6 +179,11 @@ namespace EFCoreCinemaAPI
             return 0.0m;
         }
 
+        public IQueryable<Metric> MetricsByMovieId(int id)
+        {
+            return FromExpression(() => MetricsByMovieId(id));
+        }
+
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Cine> Cines { get; set; }
