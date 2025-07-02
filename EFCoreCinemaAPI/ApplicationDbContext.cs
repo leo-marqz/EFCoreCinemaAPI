@@ -1,4 +1,5 @@
 ﻿using EFCoreCinemaAPI.Models;
+using EFCoreCinemaAPI.Models.Functions;
 using EFCoreCinemaAPI.Models.Keyless;
 using EFCoreCinemaAPI.Models.Seeding;
 using EFCoreCinemaAPI.Services;
@@ -98,6 +99,10 @@ namespace EFCoreCinemaAPI
             //Seeding initial data (Create Migration)
             SeedingQueryModule.Seed(modelBuilder);
             SeedingUsersMessages.Seed(modelBuilder);
+            SeedingInvoices.Seed(modelBuilder);
+
+            // Register scalar functions
+            //Scalars.RegisterFunctions(modelBuilder);
 
             //modelBuilder.ApplyConfiguration(new GenreConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -166,6 +171,12 @@ namespace EFCoreCinemaAPI
             modelBuilder.Entity<Laptop>().HasData(laptopHp);
             modelBuilder.Entity<Merchandising>().HasData(merchandisingItem);
 
+        }
+
+        [DbFunction(Name = "GetInvoiceTotal")]
+        public decimal GetInvoiceTotal(int invoiceId)
+        {
+            return 0.0m;
         }
 
         public DbSet<Genre> Genres { get; set; }

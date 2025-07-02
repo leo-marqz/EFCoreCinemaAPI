@@ -1,7 +1,9 @@
 ﻿using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EFCoreCinemaAPI.Controllers
@@ -15,6 +17,20 @@ namespace EFCoreCinemaAPI.Controllers
         public InvoicesController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("scalar/function/get-total-by-invoice/all")]
+        public async Task<ActionResult> GetTotalByInvoiceId()
+        {
+            var invoices = await _context.Invoices.Select((i)=>new
+            {
+                i.Id,
+                Total = _context.GetInvoiceTotal(i.Id)
+            })
+            .OrderByDescending(i => i.Total)
+            .ToListAsync();
+
+            return Ok(invoices);
         }
 
         [HttpPost]
