@@ -31,6 +31,18 @@ namespace EFCoreCinemaAPI.Controllers
             return await _context.Set<Metric>().ToListAsync();
         }
 
+        [HttpGet("metrics/{id:int}")]
+        public async Task<ActionResult<Metric>> GetMetricsById(int id)
+        {
+            var result = await _context.MetricsByMovieId(id).FirstOrDefaultAsync();
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Movie>> Post(CreateMovieDto request)
         {

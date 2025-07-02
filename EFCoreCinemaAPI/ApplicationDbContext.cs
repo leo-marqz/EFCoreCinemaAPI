@@ -119,13 +119,16 @@ namespace EFCoreCinemaAPI
             // Configuring Metrics as a keyless view
             //modelBuilder.Entity<Metric>().HasNoKey().ToView("Metrics"); 
 
-            modelBuilder.Entity<Metric>().ToSqlQuery(@"select Id, Title, 
-                                                        (select count(*) from GenreMovie where MoviesId = Movies.Id) as TotalGenres,
-                                                        (select count(distinct CineId) from CineRoomMovie 
-                                                        inner join CineRooms on CineRooms.Id = CineRoomMovie.CineRoomsId 
-                                                        where MoviesId = Movies.Id) as TotalCines,
-                                                        (select count(*) from MoviesActors where MovieId = Movies.Id) as TotalActors from Movies"
-            );
+            modelBuilder.Entity<Metric>().HasNoKey().ToTable(name: null);
+            modelBuilder.HasDbFunction(() => MetricsByMovieId(default));
+
+            //modelBuilder.Entity<Metric>().ToSqlQuery(@"select Id, Title, 
+            //                                            (select count(*) from GenreMovie where MoviesId = Movies.Id) as TotalGenres,
+            //                                            (select count(distinct CineId) from CineRoomMovie 
+            //                                            inner join CineRooms on CineRooms.Id = CineRoomMovie.CineRoomsId 
+            //                                            where MoviesId = Movies.Id) as TotalCines,
+            //                                            (select count(*) from MoviesActors where MovieId = Movies.Id) as TotalActors from Movies"
+            //);
 
             //esto es algo que no es cubierno por las convenciones de EF Core
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
