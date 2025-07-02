@@ -19,6 +19,14 @@ namespace EFCoreCinemaAPI.Controllers
             _context = context;
         }
 
+        [HttpGet("{id:int}/details")]
+        public async Task<ActionResult<IEnumerable<InvoiceDetail>>> GetDetailByInvoiceId(int id)
+        {
+            return await _context.InvoiceDetails.Where((ivd)=> ivd.InvoiceId == id)
+                .OrderByDescending(ivd => ivd.Total)
+                .ToListAsync();
+        }
+
         [HttpGet("scalar/function/get-total-by-invoice/all")]
         public async Task<ActionResult> GetTotalByInvoiceId()
         {
