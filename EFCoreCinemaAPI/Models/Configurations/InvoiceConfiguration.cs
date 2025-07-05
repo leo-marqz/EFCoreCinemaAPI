@@ -7,6 +7,20 @@ namespace EFCoreCinemaAPI.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Invoice> builder)
         {
+            // Configuración de la tabla Invoice como tabla de auditoría o temporal
+            builder.ToTable("Invoices", (options) =>
+            {
+                options.IsTemporal((tb) =>
+                {
+                    tb.HasPeriodStart(propertyName: "Desde");
+                    tb.HasPeriodEnd(propertyName: "Hasta");
+                    tb.UseHistoryTable(name: "Invoices_History");
+                });
+            });
+
+            builder.Property("Desde").HasColumnName("Desde").HasColumnType("datetime2");
+            builder.Property("Hasta").HasColumnName("Hasta").HasColumnType("datetime2");
+
             builder.HasMany(typeof(InvoiceDetail)).WithOne();
 
             // Nos sirve para detectar conflictos de concurrencia
