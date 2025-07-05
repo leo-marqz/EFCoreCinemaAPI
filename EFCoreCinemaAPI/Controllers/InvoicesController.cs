@@ -170,7 +170,18 @@ namespace EFCoreCinemaAPI.Controllers
                     "The invoice has been modified by another user. " +
                     "Please reload the invoice and try again.");
             }
-            
+
         }
+
+        //[HttpPut("concurrency-with-desconnected-model")]
+        //public async Task<ActionResult<Invoice>> PutWithDesconnectedModel()
+        //{
+        //    //Para este caso, es requerido crear un modelo DTO que contenga los campos que se desean actualizar
+        //    // y el valor original de ese campo para poder detectar conflictos de concurrencia.
+        //    // por ejemplo, con el modelo genre o genero, al querer actualizar el nombre de un genero existente
+        //    // se debe enviar el nombre original del genero y decirle a EF Core que campo ha sido el modificado
+        //    // y cual era el valor original del campo.
+        //    // asi, EF Core se encarga de actualizar el campo version y detectar conflictos de concurrencia.
+        //}
     }
 }
