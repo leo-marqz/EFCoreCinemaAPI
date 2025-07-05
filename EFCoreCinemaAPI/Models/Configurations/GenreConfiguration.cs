@@ -8,6 +8,18 @@ namespace EFCoreCinemaAPI.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Genre> builder)
         {
+            //Tablas temporales: Nos permite evar un historial de cambios en la entidad.
+            //Esto es util para auditoria, o para mantener un historial de cambios
+            //en la entidad sin necesidad de crear una tabla adicional.
+            //Ademas, nos permite recuperar la entidad en un estado anterior
+            builder.ToTable("Genres", (options) =>
+            {
+                options.IsTemporal();
+            });
+
+            builder.Property("PeriodStart").HasColumnType("datetime2");
+            builder.Property("PeriodEnd").HasColumnType("datetime2");
+
             builder.HasKey(g => g.Id);
             builder.Property(g=>g.Name)
                 .HasMaxLength(25)
