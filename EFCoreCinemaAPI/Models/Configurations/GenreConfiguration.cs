@@ -12,11 +12,13 @@ namespace EFCoreCinemaAPI.Models.Configurations
             //Esto es util para auditoria, o para mantener un historial de cambios
             //en la entidad sin necesidad de crear una tabla adicional.
             //Ademas, nos permite recuperar la entidad en un estado anterior
+            //Tabla Temporal: Genres -> GenresHistory para el historial de cambios o eliminados.
             builder.ToTable("Genres", (options) =>
             {
                 options.IsTemporal();
             });
 
+            //Configuramos las propiedades de la entidad Genre[Tabla Temporal]
             builder.Property("PeriodStart").HasColumnType("datetime2");
             builder.Property("PeriodEnd").HasColumnType("datetime2");
 

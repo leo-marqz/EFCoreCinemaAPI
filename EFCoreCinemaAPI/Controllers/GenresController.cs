@@ -21,6 +21,65 @@ namespace EFCoreCinemaAPI.Controllers
             _context = context;
         }
 
+        [HttpGet("temporal-all/genre/{id:int}")]
+        public async Task<ActionResult> GetAllTemporalAll(int id)
+        {
+            //Consultando todo el historico de un género específico por ID
+            var genres = await _context.Genres
+                .TemporalAll() // Retrieves all temporal data
+                .AsTracking() // Ensures that the entity is tracked by the context
+                .Where(g => g.Id == id)
+                .Select((g) =>new
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    PeriodStart = EF.Property<DateTime>(g, "PeriodStart"),
+                    PeriodEnd = EF.Property<DateTime>(g, "PeriodEnd"),
+                })
+                .ToListAsync();
+
+            return Ok(genres);
+        }
+
+        [HttpGet("temporal-as-of/genre/{id:int}")]
+        public async Task<ActionResult> GetTemporalAsOf(int id, DateTime date)
+        {
+            //Consultando el historico de un genero específico por ID en una fecha específica
+            var genres = await _context.Genres
+                .TemporalAsOf(date) 
+                .AsTracking()
+                .Where(g => g.Id == id)
+                .Select((g) => new
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    PeriodStart = EF.Property<DateTime>(g, "PeriodStart"),
+                    PeriodEnd = EF.Property<DateTime>(g, "PeriodEnd"),
+                })
+                .ToListAsync();
+            return Ok(genres);
+        }
+
+        [HttpGet("temporal-for-to/genre/{id:int}")]
+        public async Task<ActionResult> TemporalFromToByGenreId(int id, DateTime from, DateTime to)
+        {
+            //Consultando el historico de un género específico por ID en un rango de fechas
+            var genres = await _context.Genres
+                .TemporalFromTo(from, to)
+                .AsTracking() 
+                .Where(g => g.Id == id)
+                .Select((g) => new
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    PeriodStart = EF.Property<DateTime>(g, "PeriodStart"),
+                    PeriodEnd = EF.Property<DateTime>(g, "PeriodEnd"),
+                })
+                .ToListAsync();
+
+            return Ok(genres);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genre>>> Get()
         {
