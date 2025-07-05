@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EFCoreCinemaAPI.Models
 {
@@ -9,6 +10,8 @@ namespace EFCoreCinemaAPI.Models
     public class Genre : AuditableEntity
     {
         public int Id { get; set; }
+
+        [ConcurrencyCheck] // Esto asegura que el campo Name se maneje correctamente en caso de concurrencia
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
 

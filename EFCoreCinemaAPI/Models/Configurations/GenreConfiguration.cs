@@ -13,6 +13,13 @@ namespace EFCoreCinemaAPI.Models.Configurations
                 .HasMaxLength(25)
                 .IsRequired();
 
+            // Con IsConcurrencyToken nos ayuda a detectar conflictos de concurrencia
+            // cuando dos usuarios intentan actualizar el mismo género al mismo tiempo.
+            // Si un género es actualizado por un usuario, y otro usuario intenta actualizarlo
+            // al mismo tiempo, se lanzará una excepción de concurrencia.
+            builder.Property((g)=>g.Name)
+                   .IsConcurrencyToken();
+
             //Nos ayudara a evitar que se muestren los géneros eliminados lógicamente
             builder.HasQueryFilter(g => !g.IsDeleted);
 
