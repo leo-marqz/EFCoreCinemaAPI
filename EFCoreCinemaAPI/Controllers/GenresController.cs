@@ -101,6 +101,41 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(genres);
         }
 
+        [HttpPost("temporal-restore/genre/{id:int}")]
+        public async Task<ActionResult> RestoreTemporalGenre(int id, DateTime date)
+        {
+            var genre = await _context.Genres.TemporalAsOf(date)
+                                .IgnoreQueryFilters()
+                                .FirstOrDefaultAsync(g => g.Id == id);
+            if (genre is null)
+            {
+                return NotFound($"Genre with ID {id} not found at the specified date.");
+            }
+
+            // Restoring the genre to its state at the specified date
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync(
+                        $@"SET IDENTITY_INSERT Genres ON;
+                        INSERT INTO Genres (Id, Name)
+                        VALUES ({genre.Id}, {genre.Name});
+
+                        SET IDENTITY_INSERT Genres OFF;
+                        " 
+                    );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error!");
+            }
+            finally
+            {
+                await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Genres OFF;");
+            }
+
+            return Ok($"Genre with ID {id} restored to its state at {date}.");
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genre>>> Get()
         {
