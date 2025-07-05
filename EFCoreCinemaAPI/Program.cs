@@ -50,6 +50,9 @@ namespace EFCoreCinemaAPI
 
             using(var scope = app.Services.CreateScope())
             {
+                //no dejar valores con DateTime.Now o UtcNow en las entidades
+                // por que al crear una migracion se detectara un cambio
+                // y agregara actualizaciones innecesarias
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 
                 // Aplicar migraciones pendientes al iniciar la aplicación
