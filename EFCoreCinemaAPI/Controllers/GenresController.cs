@@ -80,6 +80,27 @@ namespace EFCoreCinemaAPI.Controllers
             return Ok(genres);
         }
 
+        [HttpGet("temporal-contain-in/genre/{id:int}")]
+        public async Task<ActionResult> TemporalContainInByGenreId(int id, DateTime from, DateTime to)
+        {
+            // Recuperando el historico de un genero específico por ID
+            // contenido entre dos fechas (los segundos son importantes)
+            var genres = await _context.Genres
+                .TemporalContainedIn(from, to)
+                .AsTracking()
+                .Where(g => g.Id == id)
+                .Select((g) => new
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    PeriodStart = EF.Property<DateTime>(g, "PeriodStart"),
+                    PeriodEnd = EF.Property<DateTime>(g, "PeriodEnd"),
+                })
+                .ToListAsync();
+
+            return Ok(genres);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genre>>> Get()
         {
