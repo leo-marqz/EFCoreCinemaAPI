@@ -4,6 +4,7 @@ using EFCoreCinemaAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreCinemaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250705023403_InvoiceVersionMigration")]
+    partial class InvoiceVersionMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("CineRoomMovie", (string)null);
+                    b.ToTable("CineRoomMovie");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Actor", b =>
@@ -67,7 +70,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actors", (string)null);
+                    b.ToTable("Actors");
 
                     b.HasData(
                         new
@@ -118,7 +121,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cines", (string)null);
+                    b.ToTable("Cines");
 
                     b.HasData(
                         new
@@ -161,7 +164,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("CineId1");
 
-                    b.ToTable("CineOffers", (string)null);
+                    b.ToTable("CineOffers");
 
                     b.HasData(
                         new
@@ -228,7 +231,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("CineId");
 
-                    b.ToTable("CineRooms", (string)null);
+                    b.ToTable("CineRooms");
 
                     b.HasData(
                         new
@@ -293,7 +296,7 @@ namespace EFCoreCinemaAPI.Migrations
                         .IsUnique()
                         .HasFilter("IsDeleted = 'false'");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
 
                     b.HasData(
                         new
@@ -357,7 +360,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
 
                     b.HasData(
                         new
@@ -399,7 +402,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceDetails", (string)null);
+                    b.ToTable("InvoiceDetails");
 
                     b.HasData(
                         new
@@ -467,7 +470,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs", (string)null);
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Message", b =>
@@ -493,7 +496,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("ReceiverId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
 
                     b.HasData(
                         new
@@ -553,7 +556,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
 
                     b.HasData(
                         new
@@ -601,7 +604,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("ActorId");
 
-                    b.ToTable("MoviesActors", (string)null);
+                    b.ToTable("MoviesActors");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Payment", b =>
@@ -624,7 +627,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
 
                     b.HasDiscriminator<int>("Type").HasValue(0);
 
@@ -664,7 +667,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.UseTptMappingStrategy();
                 });
@@ -682,7 +685,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
@@ -709,7 +712,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("GenreMovie", (string)null);
+                    b.ToTable("GenreMovie");
                 });
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.CardPay", b =>
@@ -864,7 +867,7 @@ namespace EFCoreCinemaAPI.Migrations
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Actor", b =>
                 {
-                    b.OwnsOne("EFCoreCinemaAPI.Models.Actor.BillingAddress#EFCoreCinemaAPI.Models.Address", "BillingAddress", b1 =>
+                    b.OwnsOne("EFCoreCinemaAPI.Models.Address", "BillingAddress", b1 =>
                         {
                             b1.Property<int>("ActorId")
                                 .HasColumnType("int");
@@ -881,13 +884,13 @@ namespace EFCoreCinemaAPI.Migrations
 
                             b1.HasKey("ActorId");
 
-                            b1.ToTable("Actors", (string)null);
+                            b1.ToTable("Actors");
 
                             b1.WithOwner()
                                 .HasForeignKey("ActorId");
                         });
 
-                    b.OwnsOne("EFCoreCinemaAPI.Models.Actor.HomeAddress#EFCoreCinemaAPI.Models.Address", "HomeAddress", b1 =>
+                    b.OwnsOne("EFCoreCinemaAPI.Models.Address", "HomeAddress", b1 =>
                         {
                             b1.Property<int>("ActorId")
                                 .HasColumnType("int");
@@ -907,7 +910,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                             b1.HasKey("ActorId");
 
-                            b1.ToTable("Actors", (string)null);
+                            b1.ToTable("Actors");
 
                             b1.WithOwner()
                                 .HasForeignKey("ActorId");
@@ -920,7 +923,7 @@ namespace EFCoreCinemaAPI.Migrations
 
             modelBuilder.Entity("EFCoreCinemaAPI.Models.Cine", b =>
                 {
-                    b.OwnsOne("EFCoreCinemaAPI.Models.Cine.Address#EFCoreCinemaAPI.Models.Address", "Address", b1 =>
+                    b.OwnsOne("EFCoreCinemaAPI.Models.Address", "Address", b1 =>
                         {
                             b1.Property<int>("CineId")
                                 .HasColumnType("int");
@@ -940,7 +943,7 @@ namespace EFCoreCinemaAPI.Migrations
 
                             b1.HasKey("CineId");
 
-                            b1.ToTable("Cines", (string)null);
+                            b1.ToTable("Cines");
 
                             b1.WithOwner()
                                 .HasForeignKey("CineId");
