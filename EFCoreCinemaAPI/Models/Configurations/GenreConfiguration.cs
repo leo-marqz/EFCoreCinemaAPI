@@ -19,8 +19,8 @@ namespace EFCoreCinemaAPI.Models.Configurations
             });
 
             //Configuramos las propiedades de la entidad Genre[Tabla Temporal]
-            builder.Property("PeriodStart").HasColumnType("datetime2");
-            builder.Property("PeriodEnd").HasColumnType("datetime2");
+            builder.Property<DateTime>("PeriodStart").HasColumnType("datetime2");
+            builder.Property<DateTime>("PeriodEnd").HasColumnType("datetime2");
 
             builder.HasKey(g => g.Id);
             builder.Property(g=>g.Name)
