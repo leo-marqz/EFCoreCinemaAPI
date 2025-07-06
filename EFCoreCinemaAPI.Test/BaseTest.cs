@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreCinemaAPI.Test
 {
-    internal class BaseTest
+    public class BaseTest
     {
         protected ApplicationDbContext CreateContext(string dbname)
         {
