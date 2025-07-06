@@ -1,4 +1,5 @@
-﻿using EFCoreCinemaAPI.Models;
+﻿using AutoMapper;
+using EFCoreCinemaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,12 @@ namespace EFCoreCinemaAPI.Controllers
     public class GenresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public GenresController(ApplicationDbContext context)
+        public GenresController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("temporal-all/genre/{id:int}")]
