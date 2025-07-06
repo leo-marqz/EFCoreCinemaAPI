@@ -97,9 +97,12 @@ namespace EFCoreCinemaAPI
             base.OnModelCreating(modelBuilder);
 
             //Seeding initial data (Create Migration)
-            SeedingQueryModule.Seed(modelBuilder);
-            SeedingUsersMessages.Seed(modelBuilder);
-            SeedingInvoices.Seed(modelBuilder);
+            if (!Database.IsInMemory())
+            {
+                SeedingQueryModule.Seed(modelBuilder);
+                SeedingUsersMessages.Seed(modelBuilder);
+                SeedingInvoices.Seed(modelBuilder);
+            }
 
             // Register scalar functions
             //Scalars.RegisterFunctions(modelBuilder);
